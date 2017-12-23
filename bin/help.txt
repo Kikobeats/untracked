@@ -1,0 +1,27 @@
+Usage
+  $ untracked
+
+Just declare a `untracked` field in your `package.json` with:
+
+- whitelist: Files you want to include.
+- blacklist: Files you want to ignore.
+
+For example:
+
+{
+  "untracked": {
+    "whitelist": [
+      "build",
+      "bin",
+      ".metascraperrc"
+    ],
+    "blacklist": [
+      "node_modules/puppeteer/.local-chromium"
+    ]
+  },
+}
+
+Files declared need to follow gitignore pattern format:
+https://git-scm.com/docs/gitignore#_pattern_format
+
+Your `dependencies` are included by default.

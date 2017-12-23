@@ -1,0 +1,58 @@
+{
+  "name": "untracked",
+  "description": "Specifies intentionally untracked files to ignore",
+  "homepage": "https://documentup.com/Kikobeats/untracked",
+  "version": "0.0.0",
+  "main": "src/index.js",
+  "bin": {
+    "untracked": "bin/index.js"
+  },
+  "author": {
+    "email": "josefrancisco.verdu@gmail.com",
+    "name": "Kiko Beats",
+    "url": "https://kikobeats.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kikobeats/untracked.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kikobeats/untracked/issues"
+  },
+  "keywords": [],
+  "dependencies": {
+    "cosmiconfig": "~3.1.0",
+    "lodash.get": "~4.4.2",
+    "meow": "~4.0.0",
+    "update-notifier": "~2.3.0"
+  },
+  "devDependencies": {
+    "coveralls": "latest",
+    "git-dirty": "latest",
+    "husky": "latest",
+    "lint-staged": "latest",
+    "prettier-standard": "latest",
+    "standard": "latest",
+    "standard-markdown": "latest"
+  },
+  "engines": {
+    "node": ">= 6"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "standard-markdown && standard",
+    "precommit": "lint-staged",
+    "pretest": "npm run lint",
+    "pretty": "prettier-standard index.js {core,test,bin}/**/*.js --single-quote",
+    "test": "exit 0"
+  },
+  "preferGlobal": true,
+  "license": "MIT",
+  "lint-staged": {
+    "*.js": [
+      "prettier-standard",
+      "git add"
+    ]
+  }
+}

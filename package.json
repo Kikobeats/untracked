@@ -19,7 +19,15 @@
   "bugs": {
     "url": "https://github.com/Kikobeats/untracked/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "apex",
+    "aws",
+    "gitignore",
+    "lambda",
+    "up",
+    "upignore",
+    "webpack"
+  ],
   "dependencies": {
     "cosmiconfig": "~3.1.0",
     "lodash.get": "~4.4.2",
@@ -52,6 +60,10 @@
   "lint-staged": {
     "*.js": [
       "prettier-standard",
+      "git add"
+    ],
+    "package.json": [
+      "finepack",
       "git add"
     ]
   }

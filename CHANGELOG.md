@@ -1,3 +1,10 @@
+<a name="1.0.1"></a>
+## 1.0.1 (2017-12-24)
+
+* Resolve all production deps ([419048a](https://github.com/Kikobeats/untracked/commit/419048a))
+
+
+
 <a name="1.0.0"></a>
 # 1.0.0 (2017-12-24)
 

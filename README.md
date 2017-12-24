@@ -50,6 +50,11 @@ Then just run the command:
 $ untracked > .upignore
 ```
 
+## Related
+
+- [node-prune](https://github.com/tj/node-prune) – Remove unnecessary files from node_modules (.md, .ts, ...).
+- [lambdapack](https://github.com/toriihq/lambdapack) – Package your AWS Lambda efficiently.
+
 ## License
 
 **untracked** © [Kiko Beats](https://kikobeats.com), Released under the [MIT](https://github.com/Kikobeats/untracked/blob/master/LICENSE.md) License.<br>

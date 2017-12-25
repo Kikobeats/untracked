@@ -35,7 +35,7 @@ For example:
     "blacklist": [
       "node_modules/puppeteer/.local-chromium"
     ]
-  },
+  }
 }
 ```
 

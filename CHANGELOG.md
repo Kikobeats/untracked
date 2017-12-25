@@ -1,3 +1,10 @@
+<a name="1.0.2"></a>
+## 1.0.2 (2017-12-25)
+
+* Add more rules ([12b1e25](https://github.com/Kikobeats/untracked/commit/12b1e25))
+
+
+
 <a name="1.0.1"></a>
 ## 1.0.1 (2017-12-24)
 

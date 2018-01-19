@@ -41,6 +41,7 @@ module.exports = [
   'license*',
   'License*',
   'LICENSE*',
+  'LICENCE*',
   'Makefile',
   'node_modules/*',
   'npm-*.log',

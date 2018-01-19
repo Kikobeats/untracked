@@ -1,3 +1,12 @@
+<a name="1.0.3"></a>
+## 1.0.3 (2018-01-19)
+
+* Add license variation ([84a14ed](https://github.com/Kikobeats/untracked/commit/84a14ed))
+* Update README.md ([25c69c4](https://github.com/Kikobeats/untracked/commit/25c69c4))
+* fix(package): update cosmiconfig to version 4.0.0 ([5905265](https://github.com/Kikobeats/untracked/commit/5905265))
+
+
+
 <a name="1.0.2"></a>
 ## 1.0.2 (2017-12-25)
 

@@ -1,3 +1,10 @@
+<a name="1.0.4"></a>
+## 1.0.4 (2018-01-23)
+
+* Add more files to ignore ([afa1036](https://github.com/Kikobeats/untracked/commit/afa1036))
+
+
+
 <a name="1.0.3"></a>
 ## 1.0.3 (2018-01-19)
 

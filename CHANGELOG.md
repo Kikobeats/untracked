@@ -1,3 +1,10 @@
+<a name="1.0.6"></a>
+## 1.0.6 (2018-02-09)
+
+* Fix files field ([25af8a5](https://github.com/Kikobeats/untracked/commit/25af8a5))
+
+
+
 <a name="1.0.5"></a>
 ## 1.0.5 (2018-02-09)
 

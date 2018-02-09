@@ -1,3 +1,11 @@
+<a name="1.0.5"></a>
+## 1.0.5 (2018-02-09)
+
+* Add files field ([128f499](https://github.com/Kikobeats/untracked/commit/128f499))
+* Add more files to ignore ([3168d74](https://github.com/Kikobeats/untracked/commit/3168d74))
+
+
+
 <a name="1.0.4"></a>
 ## 1.0.4 (2018-01-23)
 

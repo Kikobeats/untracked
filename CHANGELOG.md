@@ -1,3 +1,10 @@
+<a name="1.0.7"></a>
+## 1.0.7 (2018-03-06)
+
+* Update ([8529fae](https://github.com/Kikobeats/untracked/commit/8529fae))
+
+
+
 <a name="1.0.6"></a>
 ## 1.0.6 (2018-02-09)
 

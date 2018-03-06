@@ -42,6 +42,7 @@ module.exports = [
   'History*',
   'HISTORY*',
   'htmllint.js',
+  'ISSUE_TEMPLATE*',
   'jest.config.js',
   'karma.conf.js',
   'LICENCE*',

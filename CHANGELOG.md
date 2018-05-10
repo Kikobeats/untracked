@@ -1,3 +1,14 @@
+<a name="1.0.8"></a>
+## 1.0.8 (2018-05-10)
+
+* Migrate to last cosmiconfig version ([da960d9](https://github.com/Kikobeats/untracked/commit/da960d9))
+* fix(package): update cosmiconfig to version 5.0.0 ([5f5d471](https://github.com/Kikobeats/untracked/commit/5f5d471))
+* fix(package): update meow to version 5.0.0 ([3a60363](https://github.com/Kikobeats/untracked/commit/3a60363))
+* fix(package): update update-notifier to version 2.4.0 ([1d5b950](https://github.com/Kikobeats/untracked/commit/1d5b950))
+* fix(package): update update-notifier to version 2.5.0 ([80fe27c](https://github.com/Kikobeats/untracked/commit/80fe27c))
+
+
+
 <a name="1.0.7"></a>
 ## 1.0.7 (2018-03-06)
 

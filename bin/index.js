@@ -3,8 +3,9 @@
 'use strict'
 
 const path = require('path')
+
 const pkg = require('../package.json')
-const prune = require('..')
+const untracked = require('..')
 
 require('update-notifier')({ pkg }).notify()
 
@@ -13,7 +14,6 @@ const { flags: opts } = require('meow')({
   help: require('fs').readFileSync(path.join(__dirname, 'help.txt'), 'utf8')
 })
 ;(async () => {
-  const cwd = process.env.NODE_PRUNE_CWD || process.cwd()
-  const output = await prune({ cwd, ...opts })
+  const output = await untracked(opts)
   console.log(output)
 })()

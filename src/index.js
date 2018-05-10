@@ -5,9 +5,8 @@ const loadConfig = require('./load-config')
 
 const doNotIgnore = dep => `!${dep}`
 
-module.exports = async ({ cwd }) => {
-  const { blacklist, whitelist } = await loadConfig({ cwd })
-
+module.exports = async opts => {
+  const { blacklist, whitelist } = await loadConfig(opts)
   const removeBlacklistedDeps = dep => !blacklist.includes(dep)
   const includeNamespaces = dep =>
     dep.indexOf('/') >= 0 ? dep.split('/')[0] : dep

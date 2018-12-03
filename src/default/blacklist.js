@@ -15,6 +15,7 @@ module.exports = [
   '__*__',
   '_config.yml',
   '.*',
+  'eslint',
   '*.d.ts',
   '*.flow',
   '*.map.json',
@@ -31,8 +32,8 @@ module.exports = [
   'example/*',
   'examples',
   'Gruntfile.js',
-  'gulpfile.js',
   'Gulpfile.js',
+  'gulpfile.js',
   'htmllint.js',
   'jest.config.js',
   'karma.conf.js',
@@ -56,6 +57,7 @@ module.exports = [
   .concat(cases('code_of_conduct'))
   .concat(cases('governance'))
   .concat(cases('licence'))
+  .concat(cases('license-*'))
   .concat(cases('license'))
   .concat(cases('history'))
   .concat(cases('readme'))

@@ -1,3 +1,11 @@
+<a name="1.1.0"></a>
+# 1.1.0 (2018-12-03)
+
+* feat: improve filtering ([9373577](https://github.com/Kikobeats/untracked/commit/9373577))
+* Update package.json ([3f3d726](https://github.com/Kikobeats/untracked/commit/3f3d726))
+
+
+
 <a name="1.0.8"></a>
 ## 1.0.8 (2018-05-10)
 

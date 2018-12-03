@@ -1,5 +1,16 @@
 'use strict'
 
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
+
+const cases = word => [
+  `${word.toUpperCase()}.*`,
+  `${word.toUpperCase()}`,
+  `${word}.*`,
+  `${word}`,
+  `${capitalize(word)}.*`,
+  `${capitalize(word)}`
+]
+
 module.exports = [
   '__*__',
   '_config.yml',
@@ -10,20 +21,7 @@ module.exports = [
   '*.map',
   '*.opts',
   'appveyor.yml',
-  'AUTHORS*',
-  'changelog*',
-  'Changelog*',
-  'CHANGELOG*',
-  'CHANGES*',
   'circle.yml',
-  'CODE_OF_CONDUCT*',
-  'contributing*',
-  'Contributing*',
-  'CONTRIBUTING*',
-  'contribution*',
-  'Contribution*',
-  'CONTRIBUTION*',
-  'CONTRIBUTORS',
   'coverage/',
   'demo/',
   'doc/*',
@@ -32,35 +30,35 @@ module.exports = [
   'example.*',
   'example/*',
   'examples',
-  'Governance.md',
-  'GOVERNANCE.md',
   'Gruntfile.js',
   'gulpfile.js',
   'Gulpfile.js',
-  'history.md',
-  'history*',
-  'History*',
-  'HISTORY*',
   'htmllint.js',
-  'ISSUE_TEMPLATE*',
   'jest.config.js',
   'karma.conf.js',
-  'LICENCE*',
-  'license*',
-  'License*',
-  'LICENSE*',
   'Makefile',
   'node_modules/*',
   'npm-*.log',
   'package-lock.json',
-  'PULL_REQUEST_TEMPLATE*',
-  'readme*',
-  'Readme*',
-  'README*',
-  'security.md',
   'stylelint*',
   'test*',
   'tsconfig.json',
   'yarn-*.log',
   'yarn.lock'
 ]
+  .concat(cases('author'))
+  .concat(cases('authors'))
+  .concat(cases('changelog'))
+  .concat(cases('changes'))
+  .concat(cases('contributing'))
+  .concat(cases('contribution'))
+  .concat(cases('contributors'))
+  .concat(cases('code_of_conduct'))
+  .concat(cases('governance'))
+  .concat(cases('licence'))
+  .concat(cases('license'))
+  .concat(cases('history'))
+  .concat(cases('readme'))
+  .concat(cases('security'))
+  .concat(cases('pull_request_template'))
+  .concat(cases('issue_template'))

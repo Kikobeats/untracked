@@ -1,3 +1,10 @@
+<a name="1.1.1"></a>
+## 1.1.1 (2018-12-03)
+
+* fix: add more cases ([c53aea1](https://github.com/Kikobeats/untracked/commit/c53aea1))
+
+
+
 <a name="1.1.0"></a>
 # 1.1.0 (2018-12-03)
 

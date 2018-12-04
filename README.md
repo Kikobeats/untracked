@@ -9,6 +9,18 @@
 
 > Specifies intentionally untracked files to ignore.
 
+It's specially useful if you need to deploy in a environment with bundle size limitation, such as AWS Lambda.
+
+Common files to ignore are:
+
+- Documentation (`docs`, `LICENSE`, `README`, etc).
+- Toolings configuration (`Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`,etc)
+- Assets (`*.map`, `*.d.ts`, `*.flow`, etc)
+
+... and [moar](https://github.com/Kikobeats/untracked/blob/master/src/default/blacklist.js).
+
+Your `dependencies` are excluded by default.
+
 ## Install
 
 ```bash

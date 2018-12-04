@@ -19,7 +19,7 @@ Common files to ignore are:
 
 ... and [moar](https://github.com/Kikobeats/untracked/blob/master/src/default/blacklist.js).
 
-Your `dependencies` are excluded by default.
+Your `dependencies` declared at `package.json` are excluded by default, ensure they are available in your production scenario.
 
 ## Install
 

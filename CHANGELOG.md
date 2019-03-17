@@ -1,3 +1,13 @@
+<a name="1.2.0"></a>
+# 1.2.0 (2019-03-17)
+
+* build: add markup format ([252817f](https://github.com/Kikobeats/untracked/commit/252817f))
+* fix(package): update cosmiconfig to version 5.1.0 ([fe701ca](https://github.com/Kikobeats/untracked/commit/fe701ca))
+* Update README.md ([5dfe905](https://github.com/Kikobeats/untracked/commit/5dfe905))
+* Update README.md ([fdf65de](https://github.com/Kikobeats/untracked/commit/fdf65de))
+
+
+
 <a name="1.1.1"></a>
 ## 1.1.1 (2018-12-03)
 

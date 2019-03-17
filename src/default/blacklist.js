@@ -2,12 +2,30 @@
 
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
+const MARKUP_FORMAT = [
+  'markdown',
+  'mdown',
+  'mkdn',
+  'md',
+  'textile',
+  'rdoc',
+  'org',
+  'creole',
+  'mediawiki',
+  'wiki',
+  'rst',
+  'asciidoc',
+  'adoc',
+  'asc',
+  'pod'
+]
+
 const cases = word => [
-  `${word.toUpperCase()}.*`,
+  ...MARKUP_FORMAT.map(format => `${word.toUpperCase()}.${format}`),
   `${word.toUpperCase()}`,
-  `${word}.*`,
+  ...MARKUP_FORMAT.map(format => `${word}.${format}`),
   `${word}`,
-  `${capitalize(word)}.*`,
+  ...MARKUP_FORMAT.map(format => `${capitalize(word)}.${format}`),
   `${capitalize(word)}`
 ]
 

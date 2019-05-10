@@ -32,7 +32,7 @@
     "cosmiconfig": "~5.2.0",
     "lodash.get": "~4.4.2",
     "meow": "~5.0.0",
-    "update-notifier": "~2.5.0"
+    "update-notifier": "~2.6.0"
   },
   "devDependencies": {
     "coveralls": "latest",

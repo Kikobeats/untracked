@@ -1,7 +1,7 @@
 'use strict'
 
-const { execSync } = require('child_process')
 const { isObject, forEach, get } = require('lodash')
+const { execSync } = require('child_process')
 
 const flattenDeps = (pkg, acc) => {
   const dependencies = get(pkg, 'dependencies')
@@ -17,8 +17,8 @@ const readProductionDeps = () => {
   let output
   try {
     output = execSync('npm ls --prod --json 2>/dev/null')
-  } catch (e) {
-    output = e.stdout
+  } catch (err) {
+    output = err.stdout
   }
   return JSON.parse(output.toString())
 }
@@ -27,6 +27,5 @@ module.exports = () => {
   const deps = {}
   const pkg = readProductionDeps()
   flattenDeps(pkg, deps)
-  throw 'stop'
   return Object.keys(deps)
 }

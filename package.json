@@ -30,7 +30,7 @@
   ],
   "dependencies": {
     "cosmiconfig": "~5.2.0",
-    "lodash.get": "~4.4.2",
+    "lodash": "~4.17.11",
     "meow": "~5.0.0",
     "update-notifier": "~3.0.0"
   },

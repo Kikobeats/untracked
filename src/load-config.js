@@ -1,7 +1,7 @@
 'use strict'
 
 const config = require('cosmiconfig')('untracked')
-const get = require('lodash.get')
+const { get } = require('lodash')
 
 const DEFAULT = {
   blacklist: require('./default/blacklist')

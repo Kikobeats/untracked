@@ -1,15 +1,15 @@
 'use strict'
 
 const { execSync } = require('child_process')
+const { isObject, forEach, get } = require('lodash')
 
-const flattenDeps = (obj, deps) => {
-  const { dependencies } = obj || {}
-  if (typeof dependencies !== 'object') {
-    return
-  }
-  Object.keys(dependencies).forEach(dep => {
-    deps[dep] = true
-    flattenDeps(dependencies[dep], deps)
+const flattenDeps = (pkg, acc) => {
+  const dependencies = get(pkg, 'dependencies')
+  if (!isObject(dependencies)) return
+
+  forEach(dependencies, (dependencyPkg, dependencyName) => {
+    acc[dependencyName] = true
+    flattenDeps(dependencyPkg, acc)
   })
 }
 
@@ -25,7 +25,8 @@ const readProductionDeps = () => {
 
 module.exports = () => {
   const deps = {}
-  const json = readProductionDeps()
-  flattenDeps(json, deps)
+  const pkg = readProductionDeps()
+  flattenDeps(pkg, deps)
+  throw 'stop'
   return Object.keys(deps)
 }

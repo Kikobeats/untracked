@@ -5,59 +5,103 @@
 [![Dependency status](https://img.shields.io/david/Kikobeats/untracked.svg?style=flat-square)](https://david-dm.org/Kikobeats/untracked)
 [![Dev Dependencies Status](https://img.shields.io/david/dev/Kikobeats/untracked.svg?style=flat-square)](https://david-dm.org/Kikobeats/untracked#info=devDependencies)
 [![NPM Status](https://img.shields.io/npm/dm/untracked.svg?style=flat-square)](https://www.npmjs.org/package/untracked)
-[![Donate](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://paypal.me/Kikobeats)
 
-> Specifies intentionally untracked files to ignore.
+<div align="center">
+	<br>
+	<br>
+	<img src="/demo.png">
+	<br>
+	<br>
+	<br>
+</div>
 
-It's specially useful if you need to deploy in a environment with bundle size limitation, such as AWS Lambda.
-
-Common files to ignore are:
-
-- Documentation (`docs`, `LICENSE`, `README`, etc).
-- Toolings configuration (`Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`,etc)
-- Assets (`*.map`, `*.d.ts`, `*.flow`, etc)
-
-... and [moar](https://github.com/Kikobeats/untracked/blob/master/src/default/blacklist.js).
-
-Your `dependencies` declared at `package.json` are excluded by default, ensure they are available in your production scenario.
-
-## Install
-
-```bash
-$ npm install untracked --global
-```
+**untracked** is a universal way for ingnoring unnecesasry common files (such as `README.md`, `LICENSE.md`, `Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`, etc) to fit your bundle and create **smallest production ready bunddle** possible.
 
 ## Usage
 
-Just declare a `untracked` field in your `package.json` with:
+Just run the command
 
-- **whitelist**: Files you want to include.
-- **blacklist**: Files you want to ignore.
+```
+npx untracked
+```
 
-For example:
+The files to ignore will be detected automagically ✨.
+
+### Using with Up
+
+You need to write the output as [`.upignore`](https://up.docs.apex.sh/#configuration.ignoring_files).
+
+For doing that you can run the command directly
+
+```
+npx untracked > .nowignore
+```
+
+
+Also you can declare it as build [hook](https://up.docs.apex.sh/#configuration.hook_scripts)
 
 ```json
 {
-  "untracked": {
-    "whitelist": [
-      "build",
-      "bin",
-      ".metascraperrc"
+  "hooks": {
+  "build": [
+    "npx untracked > .upignore"
+  ],
+  "clean": [
+    "rm -f .upignore"
+  ]
+}
+```
+
+### Using with ZEIT Now
+
+Just you need to write the output at [`.nowignore`](https://zeit.co/guides/prevent-uploading-sourcepaths-with-nowignore) file.
+
+```
+npx untracked > .nowignore
+```
+
+
+## Additional Files
+
+Sometimes you need to declare an extra file to include/ignore in the bundle.
+
+That's could be achieve just declaring a `untracked` field into your `package.json`:
+
+```json
+{
+	"untracked": {
+		"whitelist": [
+	  "bin",
     ],
     "blacklist": [
-      "node_modules/puppeteer/.local-chromium"
+      "bench",
+      "node_modules/@ffprobe-installer/darwin-x64",
+      "node_modules/@ffprobe-installer/linux-ia32",
+      "node_modules/@ffprobe-installer/win32-ia32",
+      "node_modules/@ffprobe-installer/win32-x64",
+      "node_modules/puppeteer/.local-chromium",
+      "scripts"
     ]
   }
 }
 ```
 
-Files declared need to follow [gitignore pattern format](https://git-scm.com/docs/gitignore#_pattern_format). Your `dependencies` are included by default.
 
-Then just run the command:
+If you need to declare this files programatically, you can use any of the [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) supported ways for loading the configuration.
 
-```bash
-$ untracked > .upignore
-```
+## How It Works™️
+
+**untracked** create a list of common files to ignore using [gitignore pattern format](https://git-scm.com/docs/gitignore#_pattern_format). 
+
+This makes it compatible with any builder process that supports ignore files based on this pattern declaration.
+
+Under the hood, **untracked** supports file name variations for files such as
+
+- Documentation (`docs`, `LICENSE`, `README`, etc).
+- Toolings configuration (`Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`,etc).
+- Assets (`*.map`, `*.d.ts`, `*.flow`, etc).
+
+It creates the properly gitpattern for ignoring any of these files.
 
 ## Related
 

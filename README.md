@@ -9,7 +9,7 @@
 <div align="center">
 	<br>
 	<br>
-	<img src="/demo.png">
+	<img width="1200" src="/demo.png">
 	<br>
 	<br>
 	<br>

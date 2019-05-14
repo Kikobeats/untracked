@@ -89,7 +89,7 @@ That's could be achieve just declaring a `untracked` field into your `package.js
 
 If you need to declare this files programatically, you can use any of the [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) supported ways for loading the configuration.
 
-## How It Works™️
+## How It Works™
 
 **untracked** create a list of common files to ignore using [gitignore pattern format](https://git-scm.com/docs/gitignore#_pattern_format). 
 

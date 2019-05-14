@@ -15,7 +15,7 @@
 	<br>
 </div>
 
-**untracked** is a universal way for ingnoring unnecesasry common files (such as `README.md`, `LICENSE.md`, `Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`, etc) to fit your bundle and create **smallest production ready bunddle** possible.
+**untracked** is a universal way for ingnoring unnecessary common files (such as `README.md`, `LICENSE.md`, `Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`, etc) to fit your bundle and create **smallest production ready bunddle** possible.
 
 ## Usage
 

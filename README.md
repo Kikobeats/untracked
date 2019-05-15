@@ -60,6 +60,15 @@ Just you need to write the output at [`.nowignore`](https://zeit.co/guides/preve
 npx untracked > .nowignore
 ```
 
+### Using with Yarn
+
+[Yarn](https://yarnpkg.com) supports remove unnecessary files via [`.yarnclean`](https://yarnpkg.com/en/docs/cli/autoclean).
+
+```bash
+yarn install --production
+npx untracked > .yarnclean
+yarn autoclean --force
+```
 
 ## Additional Files
 

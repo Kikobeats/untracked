@@ -34,7 +34,7 @@ You need to write the output as [`.upignore`](https://up.docs.apex.sh/#configura
 For doing that you can run the command directly
 
 ```
-npx untracked > .nowignore
+npx untracked > .upignore
 ```
 
 

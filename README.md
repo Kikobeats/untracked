@@ -37,8 +37,7 @@ For doing that you can run the command directly
 npx untracked > .upignore
 ```
 
-
-Also you can declare it as build [hook](https://up.docs.apex.sh/#configuration.hook_scripts)
+Also, you can declare it as build [hook](https://up.docs.apex.sh/#configuration.hook_scripts) in your `up.json`:
 
 ```json
 {
@@ -49,6 +48,26 @@ Also you can declare it as build [hook](https://up.docs.apex.sh/#configuration.h
   "clean": [
     "rm -f .upignore"
   ]
+}
+```
+
+### Using with Heroku
+
+You need to write the output as [`.slugignore`](https://devcenter.heroku.com/articles/slug-compiler#ignoring-files-with-slugignore).
+
+For doing that you can run the command directly
+
+```
+npx untracked > .slugignore
+```
+
+Also, you can declare it as [`heroku-prebuild`](https://devcenter.heroku.com/articles/nodejs-support#heroku-specific-build-steps) at `scripts` in your `package.json`:
+
+```json
+{
+  "scripts": {
+    "heroku-prebuild": "npx untracked > .slugignore"
+  }
 }
 ```
 

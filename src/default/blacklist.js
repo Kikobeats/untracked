@@ -56,7 +56,6 @@ module.exports = [
   'jest.config.js',
   'karma.conf.js',
   'Makefile',
-  'node_modules/*',
   'npm-*.log',
   'package-lock.json',
   'stylelint*',

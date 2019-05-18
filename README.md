@@ -89,6 +89,15 @@ npx untracked > .yarnclean
 yarn autoclean --force
 ```
 
+### Using with Docker
+
+Just you need to write the output at [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#dockerignore-file) file.
+
+```
+npx untracked > .dockerignore
+```
+
+
 ## Additional Files
 
 Sometimes you need to declare an extra file to include/ignore in the bundle.

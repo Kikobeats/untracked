@@ -29,7 +29,7 @@
     "webpack"
   ],
   "dependencies": {
-    "cosmiconfig": "~5.2.0",
+    "cosmiconfig": "~5.2.1",
     "lodash": "~4.17.11",
     "meow": "~5.0.0",
     "update-notifier": "~3.0.0"

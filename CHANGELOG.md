@@ -1,3 +1,24 @@
+<a name="1.2.1"></a>
+## 1.2.1 (2019-06-20)
+
+* build: tweaks ([9cf1860](https://github.com/Kikobeats/untracked/commit/9cf1860))
+* build: update dependencies ([676d3a1](https://github.com/Kikobeats/untracked/commit/676d3a1))
+* build: update dependencies ([b1d0ed8](https://github.com/Kikobeats/untracked/commit/b1d0ed8))
+* build: use lodash as dependency ([9707fbc](https://github.com/Kikobeats/untracked/commit/9707fbc))
+* docs: add docker ([23b19d4](https://github.com/Kikobeats/untracked/commit/23b19d4))
+* docs: add Heroku section ([080632f](https://github.com/Kikobeats/untracked/commit/080632f))
+* docs: add yarn command ([9f88758](https://github.com/Kikobeats/untracked/commit/9f88758))
+* docs: revamped ([ef6ca02](https://github.com/Kikobeats/untracked/commit/ef6ca02))
+* [ImgBot] Optimize images ([12c3c0d](https://github.com/Kikobeats/untracked/commit/12c3c0d))
+* Fix incorrect file name on `Up` documentation ([0d76d9b](https://github.com/Kikobeats/untracked/commit/0d76d9b))
+* Update README.md ([85c3617](https://github.com/Kikobeats/untracked/commit/85c3617))
+* Update README.md ([edda309](https://github.com/Kikobeats/untracked/commit/edda309))
+* Update README.md ([ebf6c68](https://github.com/Kikobeats/untracked/commit/ebf6c68))
+* fix(package): update cosmiconfig to version 5.2.0 ([d84a41c](https://github.com/Kikobeats/untracked/commit/d84a41c))
+* fix(package): update update-notifier to version 2.6.0 ([0516c26](https://github.com/Kikobeats/untracked/commit/0516c26))
+
+
+
 <a name="1.2.0"></a>
 # 1.2.0 (2019-03-17)
 

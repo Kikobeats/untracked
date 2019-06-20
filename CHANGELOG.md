@@ -1,3 +1,10 @@
+<a name="1.2.2"></a>
+## 1.2.2 (2019-06-20)
+
+* build: migrate hooks ([3d8abd9](https://github.com/Kikobeats/untracked/commit/3d8abd9))
+
+
+
 <a name="1.2.1"></a>
 ## 1.2.1 (2019-06-20)
 

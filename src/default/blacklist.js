@@ -3,21 +3,22 @@
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
 const MARKUP_FORMAT = [
-  'markdown',
-  'mdown',
-  'mkdn',
-  'md',
-  'textile',
-  'rdoc',
-  'org',
-  'creole',
-  'mediawiki',
-  'wiki',
-  'rst',
-  'asciidoc',
   'adoc',
   'asc',
-  'pod'
+  'asciidoc',
+  'creole',
+  'markdown',
+  'md',
+  'mdown',
+  'mediawiki',
+  'mkdn',
+  'org',
+  'pod',
+  'rdoc',
+  'rst',
+  'textile',
+  'txt',
+  'wiki'
 ]
 
 const cases = word => [

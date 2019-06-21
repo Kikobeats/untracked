@@ -1,3 +1,10 @@
+<a name="1.2.3"></a>
+## 1.2.3 (2019-06-21)
+
+* build: exclude txt extension ([03162ba](https://github.com/Kikobeats/untracked/commit/03162ba))
+
+
+
 <a name="1.2.2"></a>
 ## 1.2.2 (2019-06-20)
 

@@ -142,8 +142,10 @@ It creates the properly gitpattern for ignoring any of these files.
 
 ## Related
 
+- [lambda-prune](https://github.com/Kikobeats/lambda-prune) – Cleanup old AWS Lambda functions.
 - [node-prune](https://github.com/tj/node-prune) – Remove unnecessary files from node_modules (.md, .ts, ...).
 - [lambdapack](https://github.com/toriihq/lambdapack) – Package your AWS Lambda efficiently.
+
 
 ## License
 

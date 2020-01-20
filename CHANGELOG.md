@@ -1,3 +1,10 @@
+## 1.3.0 (2020-01-20)
+
+* build: update dependencies ([afa5bff](https://github.com/Kikobeats/untracked/commit/afa5bff))
+* docs: add lambda-prune ([60005d8](https://github.com/Kikobeats/untracked/commit/60005d8))
+
+
+
 <a name="1.2.3"></a>
 ## 1.2.3 (2019-06-21)
 

@@ -1,6 +1,6 @@
 'use strict'
 
-const config = require('cosmiconfig')('untracked')
+const config = require('cosmiconfig').cosmiconfig('untracked')
 const { get } = require('lodash')
 
 const DEFAULT = {

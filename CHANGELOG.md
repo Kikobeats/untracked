@@ -1,3 +1,27 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## 1.4.0 (2020-05-07)
+
+
+### Features
+
+* improve filtering ([9373577](https://github.com/Kikobeats/untracked/commit/93735771cacb613e068c34a6459320e48c42d60f))
+
+
+### Bug Fixes
+
+* **package:** update cosmiconfig to version 4.0.0 ([5905265](https://github.com/Kikobeats/untracked/commit/59052654ce433b5f594948bc4266cc5fab378222))
+* **package:** update cosmiconfig to version 5.0.0 ([5f5d471](https://github.com/Kikobeats/untracked/commit/5f5d471cc8b723c94385763f6d5adc6c4732126a))
+* **package:** update cosmiconfig to version 5.1.0 ([fe701ca](https://github.com/Kikobeats/untracked/commit/fe701cae4e20bc5f290373eddd23eaa385e8155f))
+* **package:** update cosmiconfig to version 5.2.0 ([d84a41c](https://github.com/Kikobeats/untracked/commit/d84a41cbe67ba2538ef960e6f0ab35cc7f497d11))
+* **package:** update update-notifier to version 2.4.0 ([1d5b950](https://github.com/Kikobeats/untracked/commit/1d5b9502b7818947b09613a91b7c8bdd5a865e63))
+* **package:** update update-notifier to version 2.5.0 ([80fe27c](https://github.com/Kikobeats/untracked/commit/80fe27cf603edcfe7afb5d0a1e61db8d735e73e6))
+* **package:** update update-notifier to version 2.6.0 ([0516c26](https://github.com/Kikobeats/untracked/commit/0516c26cdc5ac967327af107482c6b12c385ac1c))
+* add more cases ([c53aea1](https://github.com/Kikobeats/untracked/commit/c53aea15edaf9ec82384588d460dfd00ca49663d))
+* **package:** update meow to version 5.0.0 ([3a60363](https://github.com/Kikobeats/untracked/commit/3a603631599921cf62a4e1ed3061a31ca5950603))
+
 ## 1.3.0 (2020-01-20)
 
 * build: update dependencies ([afa5bff](https://github.com/Kikobeats/untracked/commit/afa5bff))
@@ -137,6 +161,3 @@
 * Update README.md ([35c7803](https://github.com/Kikobeats/untracked/commit/35c7803))
 * Update README.md ([f68bd82](https://github.com/Kikobeats/untracked/commit/f68bd82))
 * docs(readme): add Greenkeeper badge ([3f8696a](https://github.com/Kikobeats/untracked/commit/3f8696a))
-
-
-

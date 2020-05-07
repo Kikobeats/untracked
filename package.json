@@ -12,6 +12,12 @@
     "name": "Kiko Beats",
     "url": "https://kikobeats.com"
   },
+  "contributors": [
+    {
+      "name": "Lucas Bento",
+      "email": "lucas.bsilva@outlook.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kikobeats/untracked.git"

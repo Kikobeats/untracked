@@ -106,8 +106,8 @@ That's could be achieve just declaring a `untracked` field into your `package.js
 
 ```json
 {
-	"untracked": {
-		"whitelist": [
+  "untracked": {
+    "whitelist": [
       "bin"
     ],
     "blacklist": [

@@ -108,7 +108,7 @@ That's could be achieve just declaring a `untracked` field into your `package.js
 {
 	"untracked": {
 		"whitelist": [
-	  "bin",
+      "bin"
     ],
     "blacklist": [
       "bench",

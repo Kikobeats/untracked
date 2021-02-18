@@ -2,8 +2,6 @@
 
 ![Last version](https://img.shields.io/github/tag/Kikobeats/untracked.svg?style=flat-square)
 [![Build Status](https://img.shields.io/travis/Kikobeats/untracked/master.svg?style=flat-square)](https://travis-ci.org/Kikobeats/untracked)
-[![Dependency status](https://img.shields.io/david/Kikobeats/untracked.svg?style=flat-square)](https://david-dm.org/Kikobeats/untracked)
-[![Dev Dependencies Status](https://img.shields.io/david/dev/Kikobeats/untracked.svg?style=flat-square)](https://david-dm.org/Kikobeats/untracked#info=devDependencies)
 [![NPM Status](https://img.shields.io/npm/dm/untracked.svg?style=flat-square)](https://www.npmjs.org/package/untracked)
 
 <div align="center">

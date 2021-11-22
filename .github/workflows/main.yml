@@ -22,10 +22,10 @@ jobs:
         run: npm install --no-package-lock
       - name: Test
         run: npm test
-      - name: Report
-        run: mkdir -p coverage && npx nyc report --reporter=text-lcov > coverage/lcov.info
-      - name: Coverage
-        uses: coverallsapp/github-action@master
+      # - name: Report
+      #   run: mkdir -p coverage && npx nyc report --reporter=text-lcov > coverage/lcov.info
+      # - name: Coverage
+      #   uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Release

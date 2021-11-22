@@ -26,8 +26,8 @@ jobs:
       #   run: mkdir -p coverage && npx nyc report --reporter=text-lcov > coverage/lcov.info
       # - name: Coverage
       #   uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
         if: ${{ github.ref == 'refs/heads/master' && !startsWith(github.event.head_commit.message, 'chore(release):') && !startsWith(github.event.head_commit.message, 'docs:') }}
         shell: 'script -q -e -c "bash {0}"'

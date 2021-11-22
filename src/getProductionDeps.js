@@ -16,7 +16,7 @@ const flattenDeps = (pkg, acc) => {
 const readProductionDeps = () => {
   let output
   try {
-    output = execSync('npm ls --prod --json 2>/dev/null')
+    output = execSync('npm ls --prod --all --json 2>/dev/null')
   } catch (err) {
     output = err.stdout
   }

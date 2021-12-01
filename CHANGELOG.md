@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.4.8 (2021-12-01)
+
+
+### Bug Fixes
+
+* pass cwd to joycon ([4099931](https://github.com/Kikobeats/untracked/commit/4099931ae00a71781981eccace017bc1faaf20af))
+
 ### 1.4.7 (2021-12-01)
 
 ### 1.4.6 (2021-11-22)

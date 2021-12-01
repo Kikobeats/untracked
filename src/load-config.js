@@ -1,7 +1,18 @@
 'use strict'
 
-const config = require('cosmiconfig').cosmiconfig('untracked')
 const { get } = require('lodash')
+const JoyCon = require('joycon')
+
+const joycon = new JoyCon({
+  packageKey: 'untracked',
+  files: [
+    'package.json',
+    '.untrackedrc',
+    '.untrackedrc.json',
+    '.untrackedrc.js',
+    'untracked.config.js'
+  ]
+})
 
 const DEFAULT = {
   blacklist: require('./default/blacklist')
@@ -14,7 +25,7 @@ const createCollection = (configFile, propName) => {
 }
 
 module.exports = async ({ cwd = process.cwd() }) => {
-  const configFile = await config.search(cwd)
+  const { data: configFile } = await joycon.load()
 
   return {
     whitelist: createCollection(configFile, 'whitelist'),

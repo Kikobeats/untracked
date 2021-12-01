@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.4.7 (2021-12-01)
+
 ### 1.4.6 (2021-11-22)
 
 ### [1.4.5](https://github.com/Kikobeats/untracked/compare/v1.4.4...v1.4.5) (2021-11-22)

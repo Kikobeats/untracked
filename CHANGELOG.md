@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.4.9 (2021-12-08)
+
+
+### Bug Fixes
+
+* read configuration prop path ([b208e6d](https://github.com/Kikobeats/untracked/commit/b208e6d2cb4a1cece184df56d116f4e73fec5aad))
+
 ### 1.4.8 (2021-12-01)
 
 

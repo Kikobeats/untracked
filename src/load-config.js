@@ -24,7 +24,7 @@ const loadConfig = async cwd => {
 }
 
 const createCollection = (configFile, propName) => {
-  const collection = new Set(get(configFile, `config.${propName}`, []))
+  const collection = new Set(get(configFile, propName, []))
   DEFAULT[propName] && DEFAULT[propName].forEach(item => collection.add(item))
   return Array.from(collection)
 }

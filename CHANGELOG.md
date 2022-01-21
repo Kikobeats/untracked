@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.4.10 (2022-01-21)
+
+
+### Bug Fixes
+
+* fallback empty object ([b025bcf](https://github.com/Kikobeats/untracked/commit/b025bcf57658ea5208c589fe492281b30ab4de0e))
+
 ### 1.4.9 (2021-12-08)
 
 

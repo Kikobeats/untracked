@@ -19,7 +19,8 @@ const loadConfig = async cwd => {
       'untracked.config.js'
     ]
   })
-  const { data: configFile } = await joycon.load()
+  const { data: configFile = {} } = (await joycon.load()) || {}
+
   return configFile
 }
 

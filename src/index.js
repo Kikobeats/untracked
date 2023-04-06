@@ -15,13 +15,11 @@ module.exports = async opts => {
     .filter(removeBlacklistedDeps)
     .map(includeNamespaces)
 
-  const output = []
-    .concat(
-      blacklist,
-      whitelist.map(doNotIgnore),
-      productionDeps.map(doNotIgnore)
-    )
-    .join('\n')
+  const output = [].concat(
+    blacklist,
+    whitelist.map(doNotIgnore),
+    productionDeps.map(doNotIgnore)
+  )
 
-  return output
+  return [...new Set(output)].join('\n')
 }

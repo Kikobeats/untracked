@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.4.17 (2023-04-21)
+
+
+### Bug Fixes
+
+* setup buffer enough big ([2125a99](https://github.com/Kikobeats/untracked/commit/2125a99cfecbf2b82bd8ff76ee5cf608ac7d6220))
+
 ### 1.4.16 (2023-04-06)
 
 

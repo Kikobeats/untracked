@@ -24,30 +24,6 @@ npx untracked
 
 The files to ignore will be detected automagically ✨.
 
-### Using with Up
-
-You need to write the output as [`.upignore`](https://up.docs.apex.sh/#configuration.ignoring_files).
-
-For doing that you can run the command directly
-
-```
-npx untracked > .upignore
-```
-
-Also, you can declare it as build [hook](https://up.docs.apex.sh/#configuration.hook_scripts) in your `up.json`:
-
-```json
-{
-  "hooks": {
-  "build": [
-    "npx untracked > .upignore"
-  ],
-  "clean": [
-    "rm -f .upignore"
-  ]
-}
-```
-
 ### Using with Heroku
 
 You need to write the output as [`.slugignore`](https://devcenter.heroku.com/articles/slug-compiler#ignoring-files-with-slugignore).
@@ -68,12 +44,12 @@ Also, you can declare it as [`heroku-prebuild`](https://devcenter.heroku.com/art
 }
 ```
 
-### Using with ZEIT Now
+### Using with Vercel
 
-Just you need to write the output at [`.nowignore`](https://zeit.co/guides/prevent-uploading-sourcepaths-with-nowignore) file.
+Just you need to write the output at [`.vercelignore`](https://vercel.com/docs/concepts/deployments/vercel-ignore) file.
 
 ```
-npx untracked > .nowignore
+npx untracked > .vercelignore
 ```
 
 ### Using with Yarn

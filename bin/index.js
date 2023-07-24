@@ -20,7 +20,7 @@ if (argv.help) {
   console.log(
     require('fs').readFileSync(path.join(__dirname, 'help.txt'), 'utf8')
   )
-  process.exit(0)
+  process.exit()
 }
 
 untracked(argv)

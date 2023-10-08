@@ -5,6 +5,11 @@ const loadConfig = require('./load-config')
 
 const doNotIgnore = dep => `!${dep}`
 
+const cleanup = array => [...new Set(array)].sort((a, b) => a.localeCompare(b))
+
+const START = '### start auto generated using `untracked`'
+const FINISH = '### finished auto generated using `untracked`'
+
 module.exports = async opts => {
   const { blacklist, whitelist } = await loadConfig(opts)
   const removeBlacklistedDeps = dep => !blacklist.includes(dep)
@@ -15,11 +20,12 @@ module.exports = async opts => {
     .filter(removeBlacklistedDeps)
     .map(includeNamespaces)
 
-  const output = [].concat(
-    blacklist,
-    whitelist.map(doNotIgnore),
-    productionDeps.map(doNotIgnore)
-  )
+  const output = []
+    .concat(
+      cleanup(blacklist),
+      cleanup(productionDeps.concat(whitelist).map(doNotIgnore))
+    )
+    .join('\n')
 
-  return [...new Set(output)].join('\n')
+  return `${START}\n${output}\n${FINISH}`
 }

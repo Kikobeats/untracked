@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.5.0 (2023-10-08)
+
+
+### Features
+
+* sort output ([f0f8b2d](https://github.com/Kikobeats/untracked/commit/f0f8b2dc81532c76628595d49842260895b2f78e))
+
 ### 1.4.20 (2023-09-05)
 
 ### 1.4.19 (2023-09-05)

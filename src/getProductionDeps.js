@@ -17,7 +17,7 @@ const readProductionDeps = () => {
   let output
   try {
     output = execSync('npm ls --prod --all --json 2> /dev/null', {
-      maxBuffer: 1024 * 1024 * 200
+      maxBuffer: 1024 * 1024 * 500
     })
   } catch (err) {
     output = err.stdout

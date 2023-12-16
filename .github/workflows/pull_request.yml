@@ -26,7 +26,7 @@ jobs:
       - name: Test
         run: npm test
       # - name: Report
-      #   run: mkdir -p coverage && npx c8 report --reporter=text-lcov > coverage/lcov.info
+      #   run: npx c8 report --reporter=text-lcov > coverage/lcov.info
       # - name: Coverage
       #   uses: coverallsapp/github-action@main
       #   with:

@@ -30,7 +30,7 @@ const createCollection = (configFile, propName) => {
   return Array.from(collection)
 }
 
-module.exports = async ({ cwd = process.cwd() }) => {
+module.exports = async ({ cwd = process.cwd() } = {}) => {
   const configFile = await loadConfig(cwd)
 
   return {

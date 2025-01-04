@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.5.8 (2025-01-04)
+
+
+### Bug Fixes
+
+* default arguments ([6132401](https://github.com/Kikobeats/untracked/commit/61324017374345008fd05e2d03cb3934e51eac76))
+
 ### 1.5.7 (2025-01-04)
 
 ### 1.5.6 (2024-05-08)

@@ -2,7 +2,7 @@
   "name": "untracked",
   "description": "Universal way for ignoring unnecessary common files to fit your bundle",
   "homepage": "https://github.com/Kikobeats/untracked",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "main": "src/index.js",
   "bin": {
     "untracked": "bin/index.js"

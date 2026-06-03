@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.6.0 (2026-06-03)
+
+
+### Features
+
+* add write flag ([9a29b36](https://github.com/Kikobeats/untracked/commit/9a29b3631452e2edd05992ed2b880958a717dc39))
+
 ### 1.5.18 (2026-06-03)
 
 

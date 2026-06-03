@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.5.18 (2026-06-03)
+
+
+### Bug Fixes
+
+* scoped packages ([6d3de88](https://github.com/Kikobeats/untracked/commit/6d3de88d062dec0788ca02a62faf68da4684942c))
+
 ### 1.5.17 (2026-06-03)
 
 ### 1.5.16 (2026-04-14)

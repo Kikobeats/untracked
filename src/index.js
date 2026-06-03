@@ -13,8 +13,10 @@ const FINISH = '### finished auto generated using `untracked`'
 module.exports = async opts => {
   const { blacklist, whitelist } = await loadConfig(opts)
   const removeBlacklistedDeps = dep => !blacklist.includes(dep)
-  const includeNamespaces = dep =>
-    dep.indexOf('/') >= 0 ? dep.split('/')[0] : dep
+  const includeNamespaces = dep => {
+    if (dep.startsWith('@')) return dep
+    return dep.indexOf('/') >= 0 ? dep.split('/')[0] : dep
+  }
 
   const productionDeps = getProductionDeps()
     .filter(removeBlacklistedDeps)

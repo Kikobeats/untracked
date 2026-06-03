@@ -34,6 +34,7 @@ module.exports = async ({ cwd = process.cwd() } = {}) => {
   const configFile = await loadConfig(cwd)
 
   return {
+    write: get(configFile, 'write', false),
     whitelist: createCollection(configFile, 'whitelist'),
     blacklist: createCollection(configFile, 'blacklist')
   }

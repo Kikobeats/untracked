@@ -1,5 +1,6 @@
 Usage
   $ untracked
+  $ untracked --write .dockerignore
 
 Just declare a `untracked` field in your `package.json` with:
 

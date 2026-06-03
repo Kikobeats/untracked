@@ -70,6 +70,12 @@ Just you need to write the output at [`.dockerignore`](https://docs.docker.com/e
 npx untracked > .dockerignore
 ```
 
+If you already have a `.dockerignore` with custom rules, you can use `--write` to update only the auto-generated section (between the `### start` and `### finished` markers) while preserving the rest:
+
+```
+npx untracked --write .dockerignore
+```
+
 
 ## Additional Files
 
@@ -84,18 +90,29 @@ That's could be achieve just declaring a `untracked` field into your `package.js
       "bin"
     ],
     "blacklist": [
-      "bench",
-      "node_modules/@ffprobe-installer/darwin-x64",
-      "node_modules/@ffprobe-installer/linux-ia32",
-      "node_modules/@ffprobe-installer/win32-ia32",
-      "node_modules/@ffprobe-installer/win32-x64",
-      "node_modules/puppeteer/.local-chromium",
-      "scripts"
+      "node_modules/puppeteer/.local-chromium"
     ]
   }
 }
 ```
 
+You can also set `write` in the configuration to automatically update a file in place when running `npx untracked`:
+
+```json
+{
+  "untracked": {
+    "write": true,
+    "whitelist": [
+      "bin"
+    ],
+    "blacklist": [
+      "node_modules/puppeteer/.local-chromium"
+    ]
+  }
+}
+```
+
+When `write` is `true`, it defaults to `.dockerignore`. You can also set it to a specific file path (e.g., `"write": ".slugignore"`).
 
 If you need to declare this files programatically, you can use any of the [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) supported ways for loading the configuration.
 

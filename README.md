@@ -1,40 +1,52 @@
-# untracked
-
-![Last version](https://img.shields.io/github/tag/Kikobeats/untracked.svg?style=flat-square)
-[![NPM Status](https://img.shields.io/npm/dm/untracked.svg?style=flat-square)](https://www.npmjs.org/package/untracked)
-
 <div align="center">
-	<br>
-	<br>
-	<img width="1200" src="/demo.png">
-	<br>
-	<br>
-	<br>
+  <br>
+  <h3 align="center">untracked</h3>
+  <img width="1200" src="/demo.png">
+  <br><br>
+  <a href="https://www.npmjs.org/package/untracked"><img src="https://img.shields.io/npm/v/untracked.svg?style=flat-square" alt="Last version"></a>
+  <a href="https://www.npmjs.org/package/untracked"><img src="https://img.shields.io/npm/dm/untracked.svg?style=flat-square" alt="NPM Status"></a>
+  <br><br>
+  Universal way for ignoring unnecessary common files to create the smallest production bundle possible.
+  <br><br>
 </div>
 
-**untracked** is a universal way for ingnoring unnecessary common files (such as `README.md`, `LICENSE.md`, `Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`, etc) to fit your bundle and create **smallest production ready bunddle** possible.
+**untracked** generates ignore patterns for files you don't need in production: documentation, config files, source maps, type definitions, test files, and more: using [gitignore pattern format](https://git-scm.com/docs/gitignore#_pattern_format), making it compatible with any tool that supports ignore files.
+
+## Install
+
+```bash
+npm install untracked -g
+```
 
 ## Usage
-
-Just run the command
 
 ```
 npx untracked
 ```
 
-The files to ignore will be detected automagically ✨.
+The files to ignore will be detected automagically.
 
-### Using with Heroku
+### Write to a file
 
-You need to write the output as [`.slugignore`](https://devcenter.heroku.com/articles/slug-compiler#ignoring-files-with-slugignore).
+Redirect the output to any ignore file:
 
-For doing that you can run the command directly
-
-```
+```bash
+npx untracked > .dockerignore
 npx untracked > .slugignore
+npx untracked > .vercelignore
 ```
 
-Also, you can declare it as [`heroku-prebuild`](https://devcenter.heroku.com/articles/nodejs-support#heroku-specific-build-steps) at `scripts` in your `package.json`:
+### Update in place
+
+If you already have an ignore file with custom rules, use `--write` to update only the auto-generated section (between `### start` and `### finished` markers) while preserving everything else:
+
+```bash
+npx untracked --write .dockerignore
+```
+
+### Platform examples
+
+**Heroku**: write as [`.slugignore`](https://devcenter.heroku.com/articles/slug-compiler#ignoring-files-with-slugignore) during prebuild:
 
 ```json
 {
@@ -44,17 +56,19 @@ Also, you can declare it as [`heroku-prebuild`](https://devcenter.heroku.com/art
 }
 ```
 
-### Using with Vercel
+**Vercel**: write as [`.vercelignore`](https://vercel.com/docs/concepts/deployments/vercel-ignore):
 
-Just you need to write the output at [`.vercelignore`](https://vercel.com/docs/concepts/deployments/vercel-ignore) file.
-
-```
+```bash
 npx untracked > .vercelignore
 ```
 
-### Using with Yarn
+**Docker**: write as [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#dockerignore-file):
 
-[Yarn](https://yarnpkg.com) supports remove unnecessary files via [`.yarnclean`](https://yarnpkg.com/en/docs/cli/autoclean).
+```bash
+npx untracked > .dockerignore
+```
+
+**Yarn**: clean up `node_modules` via [`.yarnclean`](https://yarnpkg.com/en/docs/cli/autoclean):
 
 ```bash
 yarn install --production
@@ -62,84 +76,45 @@ npx untracked > .yarnclean
 yarn autoclean --force
 ```
 
-### Using with Docker
+## Configuration
 
-Just you need to write the output at [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#dockerignore-file) file.
-
-```
-npx untracked > .dockerignore
-```
-
-If you already have a `.dockerignore` with custom rules, you can use `--write` to update only the auto-generated section (between the `### start` and `### finished` markers) while preserving the rest:
-
-```
-npx untracked --write .dockerignore
-```
-
-
-## Additional Files
-
-Sometimes you need to declare an extra file to include/ignore in the bundle.
-
-That's could be achieve just declaring a `untracked` field into your `package.json`:
+Customize ignored files by declaring an `untracked` field in your `package.json`:
 
 ```json
 {
   "untracked": {
-    "whitelist": [
-      "bin"
-    ],
-    "blacklist": [
-      "node_modules/puppeteer/.local-chromium"
-    ]
+    "whitelist": ["bin"],
+    "blacklist": ["node_modules/puppeteer/.local-chromium"]
   }
 }
 ```
 
-You can also set `write` in the configuration to automatically update a file in place when running `npx untracked`:
+| Field       | Description                                                                        |
+| ----------- | ---------------------------------------------------------------------------------- |
+| `whitelist` | Files to include in the bundle (won't be ignored)                                  |
+| `blacklist` | Additional files to ignore                                                         |
+| `write`     | Set to `true` (defaults to `.dockerignore`) or a file path to auto-update in place |
 
-```json
-{
-  "untracked": {
-    "write": true,
-    "whitelist": [
-      "bin"
-    ],
-    "blacklist": [
-      "node_modules/puppeteer/.local-chromium"
-    ]
-  }
-}
-```
+You can also use any [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) supported format: `.untrackedrc`, `.untrackedrc.json`, `.untrackedrc.js`, or `untracked.config.js`.
 
-When `write` is `true`, it defaults to `.dockerignore`. You can also set it to a specific file path (e.g., `"write": ".slugignore"`).
+## How it works
 
-If you need to declare this files programatically, you can use any of the [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) supported ways for loading the configuration.
+**untracked** builds a comprehensive list of common files to ignore, covering:
 
-## How It Works™
+- **Documentation**: `README`, `LICENSE`, `CHANGELOG`, `CONTRIBUTING`, etc. (all markup formats)
+- **Tooling**: `Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`, `jest.config.js`, etc.
+- **Assets**: `*.map`, `*.d.ts`, `*.flow`, etc.
+- **Artifacts**: `coverage/`, `docs/`, `examples/`, `test*`, etc.
 
-**untracked** create a list of common files to ignore using [gitignore pattern format](https://git-scm.com/docs/gitignore#_pattern_format). 
-
-This makes it compatible with any builder process that supports ignore files based on this pattern declaration.
-
-Under the hood, **untracked** supports file name variations for files such as
-
-- Documentation (`docs`, `LICENSE`, `README`, etc).
-- Toolings configuration (`Makefile`, `Gruntfile`, `Gulpfile`, `karma.conf.js`,etc).
-- Assets (`*.map`, `*.d.ts`, `*.flow`, etc).
-
-It creates the properly gitpattern for ignoring any of these files.
+It then reads your `dependencies` from `npm ls --prod` and generates ignore rules that exclude everything unnecessary while preserving your production dependencies.
 
 ## Related
 
-- [lambda-prune](https://github.com/Kikobeats/lambda-prune) – Cleanup old AWS Lambda functions.
-- [node-prune](https://github.com/tj/node-prune) – Remove unnecessary files from node_modules (.md, .ts, ...).
-- [lambdapack](https://github.com/toriihq/lambdapack) – Package your AWS Lambda efficiently.
-
+- [lambda-prune](https://github.com/Kikobeats/lambda-prune): Cleanup old AWS Lambda functions.
 
 ## License
 
-**untracked** © [Kiko Beats](https://kikobeats.com), released under the [MIT](https://github.com/Kikobeats/untracked/blob/master/LICENSE.md) License.<br>
-Authored and maintained by Kiko Beats with help from [contributors](https://github.com/Kikobeats/untracked/contributors).
+**untracked** &copy; [Kiko Beats](https://kikobeats.com), released under the [MIT](https://github.com/Kikobeats/untracked/blob/master/LICENSE.md) License.<br>
+Authored and maintained by [Kiko Beats](https://kikobeats.com) with help from [contributors](https://github.com/Kikobeats/untracked/contributors).
 
-> [kikobeats.com](https://kikobeats.com) · GitHub [@Kiko Beats](https://github.com/Kikobeats) · X [@Kikobeats](https://x.com/Kikobeats)
+> [kikobeats.com](https://kikobeats.com) &middot; GitHub [@Kiko Beats](https://github.com/Kikobeats) &middot; X [@Kikobeats](https://x.com/Kikobeats)

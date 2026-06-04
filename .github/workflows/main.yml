@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  SKIP_INSTALL_SIMPLE_GIT_HOOKS: true
+
 jobs:
   contributors:
     if: "${{ github.event.head_commit.message != 'build: contributors' }}"
@@ -19,11 +22,17 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v6
+        with:
+          version: latest
+      - name: Install
+        run: pnpm install --dangerously-allow-all-builds
       - name: Contributors
         run: |
-          git config --global user.email ${{ secrets.GIT_EMAIL }}
-          git config --global user.name ${{ secrets.GIT_USERNAME }}
-          npm run contributors
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+          git config --global user.name "${{ secrets.GIT_USERNAME }}"
+          pnpm contributors
       - name: Push changes
         run: |
           git push origin ${{ github.head_ref }}
@@ -51,19 +60,19 @@ jobs:
       - name: Install
         run: pnpm install --dangerously-allow-all-builds
       - name: Test
-        run: npm test
-      # - name: Report
-      #   run: npx c8 report --reporter=text-lcov > coverage/lcov.info
-      # - name: Coverage
-      #   uses: coverallsapp/github-action@main
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm test
+      - name: Report
+        run: npx c8 report --reporter=text-lcov > coverage/lcov.info
+      - name: Coverage
+        uses: coverallsapp/github-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          git config --global user.email ${{ secrets.GIT_EMAIL }}
-          git config --global user.name ${{ secrets.GIT_USERNAME }}
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+          git config --global user.name "${{ secrets.GIT_USERNAME }}"
           git pull origin master
-          npm run release
+          pnpm release

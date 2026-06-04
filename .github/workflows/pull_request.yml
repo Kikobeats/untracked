@@ -8,6 +8,9 @@ on:
     branches:
       - master
 
+env:
+  SKIP_INSTALL_SIMPLE_GIT_HOOKS: true
+
 jobs:
   test:
     if: github.ref != 'refs/heads/master'
@@ -28,10 +31,10 @@ jobs:
       - name: Install
         run: pnpm install --dangerously-allow-all-builds
       - name: Test
-        run: npm test
-      # - name: Report
-      #   run: npx c8 report --reporter=text-lcov > coverage/lcov.info
-      # - name: Coverage
-      #   uses: coverallsapp/github-action@main
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm test
+      - name: Report
+        run: npx c8 report --reporter=text-lcov > coverage/lcov.info
+      - name: Coverage
+        uses: coverallsapp/github-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

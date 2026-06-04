@@ -33,6 +33,7 @@ const untrackedWrite = async (filepath, opts) => {
 }
 
 const untracked = async opts => {
+  const { cwd = process.cwd() } = opts || {}
   const { blacklist, whitelist } = await loadConfig(opts)
   const removeBlacklistedDeps = dep => !blacklist.includes(dep)
   const includeNamespaces = dep => {
@@ -40,7 +41,7 @@ const untracked = async opts => {
     return dep.indexOf('/') >= 0 ? dep.split('/')[0] : dep
   }
 
-  const productionDeps = getProductionDeps()
+  const productionDeps = (await getProductionDeps(cwd))
     .filter(removeBlacklistedDeps)
     .map(includeNamespaces)
 

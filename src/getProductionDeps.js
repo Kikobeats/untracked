@@ -1,33 +1,20 @@
 'use strict'
 
-const { isObject, forEach, get } = require('lodash')
-const { execSync } = require('child_process')
+const $ = require('tinyspawn')
 
-const flattenDeps = (pkg, acc) => {
-  const dependencies = get(pkg, 'dependencies')
-  if (!isObject(dependencies)) return
-
-  forEach(dependencies, (dependencyPkg, dependencyName) => {
-    acc[dependencyName] = true
-    flattenDeps(dependencyPkg, acc)
+module.exports = async cwd => {
+  const { stdout } = await $('npm ls --prod --all --parseable', {
+    cwd,
+    reject: false
   })
-}
 
-const readProductionDeps = () => {
-  let output
-  try {
-    output = execSync('npm ls --prod --all --json 2> /dev/null', {
-      maxBuffer: 1024 * 1024 * 500
-    })
-  } catch (err) {
-    output = err.stdout
+  const deps = new Set()
+
+  for (const line of stdout.split('\n')) {
+    const i = line.lastIndexOf('node_modules/')
+    if (i === -1) continue
+    deps.add(line.slice(i + 'node_modules/'.length))
   }
-  return JSON.parse(output.toString())
-}
 
-module.exports = () => {
-  const deps = {}
-  const pkg = readProductionDeps()
-  flattenDeps(pkg, deps)
-  return Object.keys(deps)
+  return [...deps]
 }

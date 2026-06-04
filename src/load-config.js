@@ -1,6 +1,5 @@
 'use strict'
 
-const { get } = require('lodash')
 const JoyCon = require('joycon')
 
 const DEFAULT = {
@@ -26,7 +25,7 @@ const loadConfig = async cwd => {
 }
 
 const createCollection = (configFile, propName) => {
-  const collection = new Set(get(configFile, propName, []))
+  const collection = new Set(configFile[propName] || [])
   DEFAULT[propName] && DEFAULT[propName].forEach(item => collection.add(item))
   return Array.from(collection)
 }
@@ -35,7 +34,7 @@ module.exports = async ({ cwd = process.cwd() } = {}) => {
   const configFile = await loadConfig(cwd)
 
   return {
-    write: get(configFile, 'write', false),
+    write: configFile.write || false,
     whitelist: createCollection(configFile, 'whitelist'),
     blacklist: createCollection(configFile, 'blacklist')
   }

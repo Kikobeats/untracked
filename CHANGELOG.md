@@ -1,3 +1,8 @@
+## 1.6.3 (2026-06-04)
+
+### Performance Improvements
+
+* replace execSync+lodash with tinyspawn --parseable ([#58](https://github.com/Kikobeats/untracked/issues/58)) ([c57f697](https://github.com/Kikobeats/untracked/commit/c57f697af9677874094c0591d1ec21e7d2853bdd))
 ## 1.6.2 (2026-06-04)
 # Changelog
 

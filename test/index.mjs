@@ -11,21 +11,31 @@ const untracked = require('../src')
 const blacklist = require('../src/default/blacklist')
 const whitelist = require('../src/default/whitelist')
 
+const createFixture = (opts = {}) => {
+  const dir = join(tmpdir(), `untracked-test-${Date.now()}-${Math.random().toString(36).slice(2)}`)
+  mkdirSync(dir, { recursive: true })
+  writeFileSync(
+    join(dir, 'package.json'),
+    JSON.stringify({ name: 'test-pkg', ...opts })
+  )
+  return dir
+}
+
 test('output contains start and finish markers', async t => {
-  const output = await untracked()
+  const output = await untracked({ cwd: createFixture() })
   t.true(output.startsWith(untracked.START))
   t.true(output.endsWith(untracked.FINISH))
 })
 
 test('blacklist entries are present in output', async t => {
-  const output = await untracked()
+  const output = await untracked({ cwd: createFixture() })
   for (const entry of blacklist.slice(0, 5)) {
     t.true(output.includes(entry), `missing blacklist entry: ${entry}`)
   }
 })
 
 test('.npmrc is whitelisted by default', async t => {
-  const output = await untracked()
+  const output = await untracked({ cwd: createFixture() })
   t.true(output.includes('!.npmrc'))
 })
 
@@ -34,18 +44,12 @@ test('default whitelist includes .npmrc', t => {
 })
 
 test('user config extends defaults', async t => {
-  const dir = join(tmpdir(), `untracked-test-${Date.now()}`)
-  mkdirSync(dir, { recursive: true })
-  writeFileSync(
-    join(dir, 'package.json'),
-    JSON.stringify({
-      name: 'test-pkg',
-      untracked: {
-        blacklist: ['custom-ignore'],
-        whitelist: ['custom-keep']
-      }
-    })
-  )
+  const dir = createFixture({
+    untracked: {
+      blacklist: ['custom-ignore'],
+      whitelist: ['custom-keep']
+    }
+  })
   const output = await untracked({ cwd: dir })
   t.true(output.includes('custom-ignore'))
   t.true(output.includes('!custom-keep'))
@@ -53,13 +57,7 @@ test('user config extends defaults', async t => {
 })
 
 test('write mode replaces content between markers', async t => {
-  const dir = join(tmpdir(), `untracked-write-${Date.now()}`)
-  mkdirSync(dir, { recursive: true })
-  writeFileSync(
-    join(dir, 'package.json'),
-    JSON.stringify({ name: 'test-pkg' })
-  )
-
+  const dir = createFixture()
   const filepath = join(dir, '.gitignore')
   writeFileSync(
     filepath,
@@ -77,8 +75,7 @@ test('write mode replaces content between markers', async t => {
 })
 
 test('write mode throws when markers are missing', async t => {
-  const dir = join(tmpdir(), `untracked-nomarker-${Date.now()}`)
-  mkdirSync(dir, { recursive: true })
+  const dir = createFixture()
   const filepath = join(dir, '.gitignore')
   writeFileSync(filepath, 'no markers here')
 

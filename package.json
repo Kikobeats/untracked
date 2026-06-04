@@ -43,14 +43,16 @@
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
+    "ava": "latest",
+    "c8": "latest",
     "ci-publish": "latest",
+    "conventional-changelog-cli": "latest",
     "finepack": "latest",
     "git-authors-cli": "latest",
     "github-generate-release": "latest",
     "nano-staged": "latest",
     "simple-git-hooks": "latest",
     "standard": "latest",
-    "standard-markdown": "latest",
     "standard-version": "latest"
   },
   "engines": {
@@ -62,15 +64,19 @@
   ],
   "scripts": {
     "clean": "rm -rf node_modules",
-    "contributors": "(npx git-authors-cli && npx finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
-    "lint": "standard-markdown README.md && standard",
-    "postrelease": "npm run release:tags && npm run release:github && (ci-publish || npm publish --access=public)",
+    "contributors": "(git-authors-cli && finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
+    "lint": "standard",
+    "postrelease": "pnpm release:tags && pnpm release:github && (ci-publish || pnpm publish --access=public)",
     "pretest": "npm run lint",
     "pretty": "prettier-standard index.js {core,test,bin}/**/*.js --single-quote",
-    "release": "standard-version -a",
+    "release": "pnpm release:version && pnpm release:changelog && pnpm release:commit && pnpm release:tag",
+    "release:changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s",
+    "release:commit": "git add package.json CHANGELOG.md && git commit -m \"chore(release): $(node -p \"require('./package.json').version\")\"",
     "release:github": "github-generate-release",
-    "release:tags": "git push --follow-tags origin HEAD:master",
-    "test": "ava"
+    "release:tag": "git tag -a v$(node -p \"require('./package.json').version\") -m \"v$(node -p \"require('./package.json').version\")\"",
+    "release:tags": "git push origin HEAD:master --follow-tags",
+    "release:version": "standard-version --skip.changelog --skip.commit --skip.tag",
+    "test": "c8 ava --timeout 30s"
   },
   "preferGlobal": true,
   "license": "MIT",
@@ -88,9 +94,6 @@
     "*.js": [
       "npx @kikobeats/prettier-standard",
       "standard --fix"
-    ],
-    "*.md": [
-      "standard-markdown"
     ],
     "package.json": [
       "finepack"

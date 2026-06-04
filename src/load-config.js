@@ -4,7 +4,8 @@ const { get } = require('lodash')
 const JoyCon = require('joycon')
 
 const DEFAULT = {
-  blacklist: require('./default/blacklist')
+  blacklist: require('./default/blacklist'),
+  whitelist: require('./default/whitelist')
 }
 
 const loadConfig = async cwd => {

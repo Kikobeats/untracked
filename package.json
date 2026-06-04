@@ -70,7 +70,7 @@
     "release": "standard-version -a",
     "release:github": "github-generate-release",
     "release:tags": "git push --follow-tags origin HEAD:master",
-    "test": "exit 0"
+    "test": "ava"
   },
   "preferGlobal": true,
   "license": "MIT",

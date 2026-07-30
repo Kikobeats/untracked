@@ -1,6 +1,6 @@
 {
   "name": "untracked",
-  "description": "Universal way for ignoring unnecessary common files to fit your bundle",
+  "description": "Ignore common junk files in zip/lambda/webpack bundles with a universal untracked file list.",
   "homepage": "https://github.com/Kikobeats/untracked",
   "version": "1.6.5",
   "main": "src/index.js",
@@ -26,13 +26,16 @@
     "url": "https://github.com/Kikobeats/untracked/issues"
   },
   "keywords": [
-    "apex",
-    "aws",
+    "bundle",
+    "cleanup",
+    "deploy",
     "gitignore",
+    "ignore",
     "lambda",
-    "up",
-    "upignore",
-    "webpack"
+    "packaging",
+    "untracked",
+    "webpack",
+    "zip"
   ],
   "dependencies": {
     "joycon": "~3.1.1",

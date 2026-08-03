@@ -2,7 +2,7 @@
   "name": "untracked",
   "description": "Ignore common junk files in zip/lambda/webpack bundles with a universal untracked file list.",
   "homepage": "https://github.com/Kikobeats/untracked",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "main": "src/index.js",
   "bin": {
     "untracked": "bin/index.js"

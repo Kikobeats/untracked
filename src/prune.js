@@ -18,9 +18,6 @@ const DOC_NAMES = [
   'readme'
 ]
 
-const NESTED_TYPESCRIPT_LIB = '/node_modules/typescript/lib/'
-const TOP_LEVEL_TYPESCRIPT_LIB = '/typescript/lib/'
-
 const PRUNABLE_DOCS = new Set(
   DOC_NAMES.flatMap(name => [
     name,
@@ -42,9 +39,25 @@ const resolveReal = filepath =>
 
 const toPosix = filepath => filepath.split(path.sep).join('/')
 
-const isTypescriptLib = (absolute, relative) =>
-  absolute.includes(NESTED_TYPESCRIPT_LIB) ||
-  relative.startsWith(TOP_LEVEL_TYPESCRIPT_LIB)
+const readPackageName = dir => {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
+      .name
+  } catch (_) {
+    return undefined
+  }
+}
+
+const isTypescriptLib = dir =>
+  path.basename(dir) === 'lib' &&
+  readPackageName(path.dirname(dir)) === 'typescript'
+
+const isInsideTypescriptLib = dir => {
+  for (let current = dir; ; current = path.dirname(current)) {
+    if (isTypescriptLib(current)) return true
+    if (path.dirname(current) === current) return false
+  }
+}
 
 const normalizeKeep = (root, entry) => {
   const posix = entry.replace(/\\/g, '/').replace(/(.)\/+$/, '$1')
@@ -62,12 +75,11 @@ const isInside = (absolute, parent) =>
 const createKeepMatcher = (root, keep) => {
   const rules = keep.map(entry => normalizeKeep(root, entry))
   return filepath => {
-    const absolute = `${toPosix(filepath)}/`
+    const absolute = toPosix(filepath)
     const relative = `/${toPosix(path.relative(root, filepath))}/`
-    if (isTypescriptLib(absolute, relative)) return true
     return rules.some(rule =>
       rule.absolute
-        ? isInside(absolute.slice(0, -1), rule.absolute)
+        ? isInside(absolute, rule.absolute)
         : relative.includes(rule.segment)
     )
   }
@@ -83,7 +95,7 @@ const prune = (dir, { dryRun = false, keep = [] } = {}) => {
   const files = []
   const errors = []
   let bytes = 0
-  const pending = isKept(root) ? [] : [root]
+  const pending = isKept(root) || isInsideTypescriptLib(root) ? [] : [root]
 
   const removeFile = filepath => {
     try {
@@ -110,8 +122,9 @@ const prune = (dir, { dryRun = false, keep = [] } = {}) => {
     for (const entry of readEntries(current)) {
       const entryPath = path.join(current, entry.name)
       if (isKept(entryPath)) continue
-      if (entry.isDirectory()) pending.push(entryPath)
-      else if (entry.isFile() && isPrunable(entry.name)) removeFile(entryPath)
+      if (entry.isDirectory()) {
+        if (!isTypescriptLib(entryPath)) pending.push(entryPath)
+      } else if (entry.isFile() && isPrunable(entry.name)) removeFile(entryPath)
     }
   }
 

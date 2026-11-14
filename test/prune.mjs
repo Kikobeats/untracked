@@ -1,4 +1,4 @@
-import {
+import fs, {
   chmodSync,
   existsSync,
   mkdirSync,
@@ -58,6 +58,10 @@ const createTree = () => {
     mkdirSync(dirname(join(dir, file)), { recursive: true })
     writeFileSync(join(dir, file), 'x'.repeat(10))
   }
+  writeFileSync(
+    join(dir, '.pnpm/typescript@5.0.0/node_modules/typescript/package.json'),
+    JSON.stringify({ name: 'typescript' })
+  )
   const outside = join(root, 'outside')
   mkdirSync(outside)
   writeFileSync(join(outside, 'index.d.ts'), 'x')
@@ -314,6 +318,7 @@ test('typescript/lib at the top of a custom root is kept', t => {
   const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
   const dir = join(root, 'deps')
   mkdirSync(join(dir, 'typescript/lib'), { recursive: true })
+  writeFileSync(join(dir, 'typescript/package.json'), '{"name":"typescript"}')
   writeFileSync(join(dir, 'typescript/lib/lib.d.ts'), 'x')
   writeFileSync(join(dir, 'index.d.ts'), 'x')
   const { files } = prune(dir)
@@ -329,3 +334,35 @@ for (const keep of ['.', './']) {
     t.deepEqual(exists(dir, PRUNED), PRUNED)
   })
 }
+
+const createTypescriptPackage = () => {
+  const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+  const pkg = join(root, 'typescript')
+  mkdirSync(join(pkg, 'lib'), { recursive: true })
+  writeFileSync(join(pkg, 'package.json'), '{"name":"typescript"}')
+  writeFileSync(join(pkg, 'lib/lib.d.ts'), 'x')
+  writeFileSync(join(pkg, 'README.md'), 'x')
+  return pkg
+}
+
+test('the typescript package as the root keeps its lib', t => {
+  const pkg = createTypescriptPackage()
+  const { files } = prune(pkg)
+  t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
+  t.deepEqual(files, [join(fs.realpathSync(pkg), 'README.md')])
+})
+
+test('typescript lib as the root prunes nothing', t => {
+  const pkg = createTypescriptPackage()
+  t.deepEqual(prune(join(pkg, 'lib')).files, [])
+  t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
+})
+
+test('a lib directory of any other package is pruned', t => {
+  const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+  const dir = join(root, 'node_modules/typescript-like')
+  mkdirSync(join(dir, 'lib'), { recursive: true })
+  writeFileSync(join(dir, 'package.json'), '{"name":"typescript-like"}')
+  writeFileSync(join(dir, 'lib/index.d.ts'), 'x')
+  t.is(prune(join(root, 'node_modules')).files.length, 1)
+})

@@ -18,7 +18,7 @@ const DOC_NAMES = [
   'readme'
 ]
 
-const DEFAULT_KEEP = ['typescript/lib']
+const TYPESCRIPT_LIB = '/node_modules/typescript/lib/'
 
 const PRUNABLE_DOCS = new Set(
   DOC_NAMES.flatMap(name => [
@@ -41,19 +41,28 @@ const resolveReal = filepath =>
 
 const toPosix = filepath => filepath.split(path.sep).join('/')
 
-const createKeepMatcher = keep => {
-  const normalized = keep.map(entry => {
-    const trimmed = entry.replace(/\\/g, '/').replace(/\/+$/, '')
-    return path.posix.isAbsolute(trimmed) || path.isAbsolute(entry)
-      ? { absolute: toPosix(resolveReal(trimmed)) }
-      : { segment: `/${path.posix.normalize(trimmed).replace(/^\.\//, '')}/` }
-  })
+const isTypescriptLib = filepath =>
+  `${toPosix(filepath)}/`.includes(TYPESCRIPT_LIB)
+
+const normalizeKeep = entry => {
+  const posix = entry.replace(/\\/g, '/').replace(/(.)\/+$/, '$1')
+  if (path.posix.isAbsolute(posix) || path.isAbsolute(entry)) {
+    return { absolute: toPosix(resolveReal(posix)) }
+  }
+  return { segment: `/${path.posix.normalize(posix).replace(/^\.\//, '')}/` }
+}
+
+const createKeepMatcher = (root, keep) => {
+  const rules = keep.map(normalizeKeep)
   return filepath => {
-    const candidate = toPosix(filepath)
-    return normalized.some(({ absolute, segment }) =>
-      absolute
-        ? candidate === absolute || candidate.startsWith(`${absolute}/`)
-        : `${candidate}/`.includes(segment)
+    if (isTypescriptLib(filepath)) return true
+    const absolute = toPosix(filepath)
+    const relative = `/${toPosix(path.relative(root, filepath))}/`
+    return rules.some(rule =>
+      rule.absolute
+        ? absolute === rule.absolute ||
+        absolute.startsWith(rule.absolute.replace(/\/?$/, '/'))
+        : relative.includes(rule.segment)
     )
   }
 }
@@ -63,8 +72,8 @@ const prune = (dir, { dryRun = false, keep = [] } = {}) => {
     throw new TypeError(`Not a directory: ${dir}`)
   }
 
-  const isKept = createKeepMatcher(DEFAULT_KEEP.concat(keep))
   const root = fs.realpathSync(dir)
+  const isKept = createKeepMatcher(root, keep)
   const files = []
   const errors = []
   let bytes = 0

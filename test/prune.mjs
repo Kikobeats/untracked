@@ -9,6 +9,7 @@ import {
 import { dirname, join } from 'path'
 import { tmpdir } from 'os'
 import { createRequire } from 'module'
+import { fileURLToPath } from 'url'
 import { execFileSync } from 'child_process'
 
 import test from 'ava'
@@ -18,7 +19,7 @@ const require = createRequire(import.meta.url)
 const { prune } = require('../src')
 const { isPrunable } = require('../src/prune')
 
-const BIN = join(dirname(new URL(import.meta.url).pathname), '../bin/index.js')
+const BIN = join(dirname(fileURLToPath(import.meta.url)), '../bin/index.js')
 
 const PRUNED = [
   '.pnpm/pkg@1.0.0/node_modules/pkg/dist/index.js.map',
@@ -269,4 +270,42 @@ test('a file that cannot be deleted is reported, not counted', t => {
   } finally {
     chmodSync(readonly, 0o755)
   }
+})
+
+test('a relative keep never matches above the prune root', t => {
+  const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+  const dir = join(root, 'custom/keep/node_modules')
+  mkdirSync(join(dir, 'pkg'), { recursive: true })
+  writeFileSync(join(dir, 'pkg/index.d.ts'), 'x')
+  const { files } = prune(dir, { keep: ['custom/keep'] })
+  t.is(files.length, 1)
+})
+
+test('an ancestor named typescript/lib does not stop the walk', t => {
+  const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+  const dir = join(root, 'typescript/lib/app/node_modules')
+  mkdirSync(join(dir, 'pkg'), { recursive: true })
+  writeFileSync(join(dir, 'pkg/index.d.ts'), 'x')
+  const { files } = prune(dir)
+  t.is(files.length, 1)
+})
+
+test('--keep / keeps everything instead of the working directory', t => {
+  const { dir } = createTree()
+  const { files } = prune(dir, { keep: ['/'] })
+  t.deepEqual(files, [])
+})
+
+test('cli dry run output survives a pipe on a large tree', t => {
+  const { dir } = createTree()
+  const many = join(dir, 'many')
+  mkdirSync(many)
+  const COUNT = 20000
+  for (let i = 0; i < COUNT; i++) writeFileSync(join(many, `${i}.d.ts`), '')
+  const stdout = execFileSync(
+    'sh',
+    ['-c', `node "${BIN}" prune "${dir}" --dry-run | cat`],
+    { env: { ...process.env, NO_UPDATE_NOTIFIER: '1' }, maxBuffer: 64 * 1024 * 1024 }
+  ).toString()
+  t.true(stdout.includes(`Would prune ${COUNT + PRUNED.length + 1} files`))
 })

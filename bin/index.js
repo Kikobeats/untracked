@@ -57,29 +57,31 @@ const runPrune = args => {
   return errors.length === 0
 }
 
-if (process.argv[2] === 'prune') {
+const runPruneCommand = () => {
   try {
-    process.exit(runPrune(process.argv.slice(3)) ? 0 : 1)
+    process.exitCode = runPrune(process.argv.slice(3)) ? 0 : 1
   } catch (error) {
     console.error(error.message)
-    process.exit(1)
+    process.exitCode = 1
   }
 }
 
-const loadConfig = require('../src/load-config')
+const runIgnoreCommand = () =>
+  require('../src/load-config')(argv).then(config => {
+    const write = argv.write || config.write
 
-loadConfig(argv).then(config => {
-  const write = argv.write || config.write
+    if (write) {
+      const filepath = typeof write === 'string' ? write : '.dockerignore'
+      untracked
+        .write(filepath, argv)
+        .then(() => console.log(`Updated ${filepath}`))
+        .catch(error => console.error(error) || process.exit(1))
+    } else {
+      untracked(argv)
+        .then(output => console.log(output))
+        .catch(error => console.error(error) || process.exit(1))
+    }
+  })
 
-  if (write) {
-    const filepath = typeof write === 'string' ? write : '.dockerignore'
-    untracked
-      .write(filepath, argv)
-      .then(() => console.log(`Updated ${filepath}`))
-      .catch(error => console.error(error) || process.exit(1))
-  } else {
-    untracked(argv)
-      .then(output => console.log(output))
-      .catch(error => console.error(error) || process.exit(1))
-  }
-})
+if (process.argv[2] === 'prune') runPruneCommand()
+else runIgnoreCommand()

@@ -59,7 +59,7 @@
     "standard-version": "latest"
   },
   "engines": {
-    "node": ">= 6"
+    "node": ">= 20"
   },
   "files": [
     "bin",

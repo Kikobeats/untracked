@@ -18,6 +18,7 @@ const require = createRequire(import.meta.url)
 
 const { prune } = require('../src')
 const { isPrunable } = require('../src/prune')
+const blacklist = require('../src/default/blacklist')
 
 const BIN = join(dirname(fileURLToPath(import.meta.url)), '../bin/index.js')
 
@@ -108,6 +109,10 @@ test('throws on a path that is not a directory', t => {
   t.throws(() => prune(join(tmpdir(), 'untracked-missing-dir')), {
     message: /Not a directory/
   })
+  const file = join(tmpdir(), `untracked-not-a-dir-${Date.now()}`)
+  writeFileSync(file, 'x')
+  t.throws(() => prune(file), { message: /Not a directory/ })
+  t.true(existsSync(file))
 })
 
 test('isPrunable matches by basename, case insensitive', t => {
@@ -117,6 +122,51 @@ test('isPrunable matches by basename, case insensitive', t => {
   t.false(isPrunable('readme.js'))
   t.false(isPrunable('LICENSE'))
   t.false(isPrunable('.d.ts'))
+})
+
+const DOC_NAMES = [
+  'authors',
+  'changelog',
+  'changes',
+  'code_of_conduct',
+  'contributing',
+  'contributors',
+  'history',
+  'readme'
+]
+
+const MARKUP_FORMATS = [
+  'adoc',
+  'asc',
+  'asciidoc',
+  'creole',
+  'markdown',
+  'md',
+  'mdown',
+  'mediawiki',
+  'mkdn',
+  'org',
+  'pod',
+  'rdoc',
+  'rst',
+  'textile',
+  'txt',
+  'wiki'
+]
+
+test('every doc name is pruned in every markup format', t => {
+  for (const name of DOC_NAMES) {
+    t.true(isPrunable(name), name)
+    t.true(blacklist.includes(name.toUpperCase()), name)
+    for (const format of MARKUP_FORMATS) {
+      const filename = `${name}.${format}`
+      t.true(isPrunable(filename), filename)
+      t.true(
+        blacklist.includes(`${name.toUpperCase()}.${format}`),
+        filename
+      )
+    }
+  }
 })
 
 test('cli prunes the given directory and reports what it removed', t => {
@@ -155,6 +205,7 @@ for (const [form, toKeep] of [
   ['dot relative', () => './custom/keep'],
   ['trailing slash', () => 'custom/keep/'],
   ['windows separators', () => 'custom\\keep'],
+  ['windows absolute', dir => join(dir, 'custom/keep').replace(/\//g, '\\')],
   ['absolute', dir => join(dir, 'custom/keep')],
   ['absolute with trailing slash', dir => `${join(dir, 'custom/keep')}/`],
   ['single file', () => KEEP_FILE]
@@ -233,6 +284,15 @@ test('cli rejects --keep without a path and extra directories', t => {
   t.deepEqual(exists(dir, PRUNED), PRUNED)
 })
 
+test('cli defaults to node_modules in the working directory', t => {
+  const { dir } = createTree()
+  const { status, stdout } = runCli([], dirname(dir))
+  t.is(status, 0)
+  t.true(stdout.includes(`Pruned ${PRUNED.length + 1} files`))
+  t.true(stdout.includes('from node_modules'))
+  t.deepEqual(exists(dir, PRUNED), [])
+})
+
 test('cli dry run prints paths relative to the working directory', t => {
   const { dir } = createTree()
   const { stdout } = runCli(['--dry-run', 'node_modules'], dirname(dir))
@@ -274,6 +334,49 @@ test('a file that cannot be deleted is reported, not counted', t => {
     t.true(existsSync(join(readonly, 'index.d.ts')))
   } finally {
     chmodSync(readonly, 0o755)
+  }
+})
+
+test('a relative keep matches a whole segment anywhere in the tree', t => {
+  const { dir } = createTree()
+  mkdirSync(join(dir, 'custom/keep-extra'), { recursive: true })
+  mkdirSync(join(dir, 'mykeep'), { recursive: true })
+  writeFileSync(join(dir, 'custom/keep-extra/types.d.ts'), 'x')
+  writeFileSync(join(dir, 'mykeep/types.d.ts'), 'x')
+  prune(dir, { keep: ['pkg/dist', 'keep'] })
+  t.true(
+    existsSync(
+      join(dir, '.pnpm/pkg@1.0.0/node_modules/pkg/dist/index.d.ts')
+    )
+  )
+  t.false(
+    existsSync(join(dir, '.pnpm/pkg@1.0.0/node_modules/pkg/README.md'))
+  )
+  t.true(existsSync(join(dir, KEEP_FILE)))
+  t.false(existsSync(join(dir, 'custom/keep-extra/types.d.ts')))
+  t.false(existsSync(join(dir, 'mykeep/types.d.ts')))
+})
+
+test('an absolute keep does not match a path that only shares its prefix', t => {
+  const { dir } = createTree()
+  mkdirSync(join(dir, 'custom/keep-extra'), { recursive: true })
+  writeFileSync(join(dir, 'custom/keep-extra/types.d.ts'), 'x')
+  prune(dir, { keep: [join(dir, 'custom/keep')] })
+  t.true(existsSync(join(dir, KEEP_FILE)))
+  t.false(existsSync(join(dir, 'custom/keep-extra/types.d.ts')))
+})
+
+test('keeping the root does not read the directory', t => {
+  if (process.getuid && process.getuid() === 0) return t.pass()
+  const dir = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+  writeFileSync(join(dir, 'index.d.ts'), 'x')
+  chmodSync(dir, 0o000)
+  try {
+    const { files, errors } = prune(dir, { keep: ['.'] })
+    t.deepEqual(files, [])
+    t.deepEqual(errors, [])
+  } finally {
+    chmodSync(dir, 0o755)
   }
 })
 
@@ -359,6 +462,16 @@ test('typescript lib as the root prunes nothing', t => {
   t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
 })
 
+test('a lib directory without a package.json is pruned', t => {
+  const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+  const dir = join(root, 'node_modules/pkg/lib')
+  mkdirSync(dir, { recursive: true })
+  writeFileSync(join(dir, 'index.d.ts'), 'x')
+  const { files, errors } = prune(join(root, 'node_modules'))
+  t.is(files.length, 1)
+  t.deepEqual(errors, [])
+})
+
 test('a lib directory of any other package is pruned', t => {
   const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
   const dir = join(root, 'node_modules/typescript-like')
@@ -391,6 +504,51 @@ test('an invalid package.json next to a lib keeps it and is reported', t => {
   t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
   t.is(errors.length, 1)
   t.true(errors[0] instanceof SyntaxError)
+})
+
+test('a directory of the typescript package other than lib is pruned', t => {
+  const pkg = createTypescriptPackage()
+  mkdirSync(join(pkg, 'bin'))
+  writeFileSync(join(pkg, 'bin/index.d.ts'), 'x')
+  const { files } = prune(dirname(pkg))
+  t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
+  t.false(existsSync(join(pkg, 'bin/index.d.ts')))
+  t.true(files.includes(join(fs.realpathSync(pkg), 'bin/index.d.ts')))
+})
+
+test('a directory inside typescript lib is kept when it is the root', t => {
+  const pkg = createTypescriptPackage()
+  const sub = join(pkg, 'lib/es')
+  mkdirSync(sub)
+  writeFileSync(join(sub, 'index.d.ts'), 'x')
+  t.deepEqual(prune(sub).files, [])
+  t.true(existsSync(join(sub, 'index.d.ts')))
+})
+
+test('an invalid package.json keeps a lib that is the prune root', t => {
+  const pkg = createTypescriptPackage()
+  writeFileSync(join(pkg, 'package.json'), '{')
+  const { files, errors } = prune(join(pkg, 'lib'))
+  t.deepEqual(files, [])
+  t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
+  t.is(errors.length, 1)
+  t.true(errors[0] instanceof SyntaxError)
+})
+
+test('an unreadable package.json keeps a lib that is the prune root', t => {
+  if (process.getuid && process.getuid() === 0) return t.pass()
+  const pkg = createTypescriptPackage()
+  const manifest = join(pkg, 'package.json')
+  chmodSync(manifest, 0o000)
+  try {
+    const { files, errors } = prune(join(pkg, 'lib'))
+    t.deepEqual(files, [])
+    t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
+    t.is(errors.length, 1)
+    t.is(errors[0].code, 'EACCES')
+  } finally {
+    chmodSync(manifest, 0o644)
+  }
 })
 
 for (const [state, breakManifest] of [

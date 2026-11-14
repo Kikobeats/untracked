@@ -55,8 +55,9 @@ const isTypescriptLib = (dir, onError) => {
   return name === 'typescript' || Boolean(error)
 }
 
-const isInsideTypescriptLib = dir => {
-  for (let current = dir; ; current = path.dirname(current)) {
+const isInsideTypescriptLib = (dir, onError) => {
+  if (isTypescriptLib(dir, onError)) return true
+  for (let current = path.dirname(dir); ; current = path.dirname(current)) {
     if (readLibOwner(current).name === 'typescript') return true
     if (path.dirname(current) === current) return false
   }
@@ -99,7 +100,8 @@ const prune = (dir, { dryRun = false, keep = [] } = {}) => {
   const errors = []
   let bytes = 0
   const onError = error => errors.push(error)
-  const pending = isKept(root) || isInsideTypescriptLib(root) ? [] : [root]
+  const pending =
+    isKept(root) || isInsideTypescriptLib(root, onError) ? [] : [root]
 
   const removeFile = filepath => {
     try {

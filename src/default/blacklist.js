@@ -2,24 +2,7 @@
 
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
-const MARKUP_FORMAT = [
-  'adoc',
-  'asc',
-  'asciidoc',
-  'creole',
-  'markdown',
-  'md',
-  'mdown',
-  'mediawiki',
-  'mkdn',
-  'org',
-  'pod',
-  'rdoc',
-  'rst',
-  'textile',
-  'txt',
-  'wiki'
-]
+const MARKUP_FORMAT = require('./markup-formats')
 
 const cases = word => [
   ...MARKUP_FORMAT.map(format => `${word.toUpperCase()}.${format}`),

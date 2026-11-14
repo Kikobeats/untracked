@@ -76,6 +76,33 @@ npx untracked > .yarnclean
 yarn autoclean --force
 ```
 
+### Prune an installed `node_modules`
+
+Ignore files only filter what gets copied. When dependencies are installed inside the image or bundle (`RUN npm ci` in a Dockerfile), run `prune` after the install instead:
+
+```bash
+npx untracked prune            # defaults to ./node_modules
+npx untracked prune --dry-run  # list what would go, delete nothing
+```
+
+It deletes files no production code reads: source maps (`*.map`), type definitions (`*.d.ts`, `*.d.mts`, `*.d.cts`), Flow sources (`*.flow`), and readmes, changelogs, histories, authors, contributors and code of conduct files in any markup format. It matches file names only, so directories, dotfiles and licenses are never deleted, and it never follows symlinks, so it is safe on pnpm's `.pnpm` layout.
+
+`typescript/lib` is always kept, because the TypeScript compiler reads its `.d.ts` files at runtime. Keep any other directory or file with `--keep`, repeated as needed. A relative path matches wherever it appears in the tree, so `my-pkg/types` also covers pnpm's `.pnpm/my-pkg@1.0.0/node_modules/my-pkg/types`; an absolute path matches only itself:
+
+```bash
+npx untracked prune node_modules --keep my-pkg/types --keep other-pkg/index.d.ts
+```
+
+Unknown flags are rejected before anything is deleted. A file or directory it cannot read or delete is reported on stderr, the rest of the tree is still pruned, and the command exits with `1`.
+
+In a Dockerfile, prune in the same `RUN` as the install. A later layer only hides the files, so the image still ships them. pnpm hardlinks files from its store, so remove the store in that `RUN` too, or the space is not freed:
+
+```dockerfile
+RUN pnpm install --prod && rm -rf "$(pnpm store path)" && npx untracked prune
+```
+
+On [microlink-api](https://microlink.io)'s production dependencies it removes 17,489 files (110.9 MB) in about a second, and every dependency still loads.
+
 ## Configuration
 
 Customize ignored files by declaring an `untracked` field in your `package.json`:

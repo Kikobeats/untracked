@@ -1,6 +1,14 @@
 Usage
   $ untracked
   $ untracked --write .dockerignore
+  $ untracked prune [dir] [--dry-run] [--keep <path>]
+
+Prune
+  Deletes files no production code reads from an installed `node_modules`
+  (or `dir`): source maps, type definitions, Flow sources, readmes and
+  changelogs. Licenses, dotfiles and directories are never touched.
+  `typescript/lib` is always kept; add more paths with `--keep`. A relative
+  path matches anywhere in the tree, an absolute path only itself.
 
 Just declare a `untracked` field in your `package.json` with:
 

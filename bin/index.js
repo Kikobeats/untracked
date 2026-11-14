@@ -24,6 +24,48 @@ if (argv.help) {
   process.exit()
 }
 
+const BYTES_PER_MB = 1024 * 1024
+const PRUNE_FLAGS = ['_', 'dry-run', 'keep']
+
+const parsePruneArgs = args => {
+  const parsed = mri(args, { boolean: ['dry-run'], string: ['keep'] })
+  const unknown = Object.keys(parsed).filter(
+    flag => !PRUNE_FLAGS.includes(flag)
+  )
+  if (unknown.length > 0) {
+    throw new TypeError(`Unknown flag: --${unknown[0]}`)
+  }
+  const keep = parsed.keep === undefined ? [] : [].concat(parsed.keep)
+  if (keep.some(entry => entry === '')) {
+    throw new TypeError('--keep needs a path')
+  }
+  if (parsed._.length > 1) {
+    throw new TypeError(`Expected one directory, got: ${parsed._.join(' ')}`)
+  }
+  return { dir: parsed._[0] || 'node_modules', dryRun: parsed['dry-run'], keep }
+}
+
+const runPrune = args => {
+  const { dir, dryRun, keep } = parsePruneArgs(args)
+  const { files, bytes, errors } = untracked.prune(dir, { dryRun, keep })
+  const cwd = require('fs').realpathSync(process.cwd())
+  if (dryRun) files.forEach(file => console.log(path.relative(cwd, file)))
+  const verb = dryRun ? 'Would prune' : 'Pruned'
+  const size = (bytes / BYTES_PER_MB).toFixed(1)
+  console.log(`${verb} ${files.length} files (${size} MB) from ${dir}`)
+  errors.forEach(error => console.error(error.message))
+  return errors.length === 0
+}
+
+if (process.argv[2] === 'prune') {
+  try {
+    process.exit(runPrune(process.argv.slice(3)) ? 0 : 1)
+  } catch (error) {
+    console.error(error.message)
+    process.exit(1)
+  }
+}
+
 const loadConfig = require('../src/load-config')
 
 loadConfig(argv).then(config => {

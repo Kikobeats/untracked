@@ -57,5 +57,6 @@ const untracked = async opts => {
 
 module.exports = untracked
 module.exports.write = untrackedWrite
+module.exports.prune = require('./prune')
 module.exports.START = START
 module.exports.FINISH = FINISH

@@ -309,3 +309,23 @@ test('cli dry run output survives a pipe on a large tree', t => {
   ).toString()
   t.true(stdout.includes(`Would prune ${COUNT + PRUNED.length + 1} files`))
 })
+
+test('typescript/lib at the top of a custom root is kept', t => {
+  const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+  const dir = join(root, 'deps')
+  mkdirSync(join(dir, 'typescript/lib'), { recursive: true })
+  writeFileSync(join(dir, 'typescript/lib/lib.d.ts'), 'x')
+  writeFileSync(join(dir, 'index.d.ts'), 'x')
+  const { files } = prune(dir)
+  t.true(existsSync(join(dir, 'typescript/lib/lib.d.ts')))
+  t.is(files.length, 1)
+})
+
+for (const keep of ['.', './']) {
+  test(`--keep ${keep} keeps the whole root`, t => {
+    const { dir } = createTree()
+    const { files } = prune(dir, { keep: [keep] })
+    t.deepEqual(files, [])
+    t.deepEqual(exists(dir, PRUNED), PRUNED)
+  })
+}

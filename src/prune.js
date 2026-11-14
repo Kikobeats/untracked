@@ -18,7 +18,8 @@ const DOC_NAMES = [
   'readme'
 ]
 
-const TYPESCRIPT_LIB = '/node_modules/typescript/lib/'
+const NESTED_TYPESCRIPT_LIB = '/node_modules/typescript/lib/'
+const TOP_LEVEL_TYPESCRIPT_LIB = '/typescript/lib/'
 
 const PRUNABLE_DOCS = new Set(
   DOC_NAMES.flatMap(name => [
@@ -41,27 +42,32 @@ const resolveReal = filepath =>
 
 const toPosix = filepath => filepath.split(path.sep).join('/')
 
-const isTypescriptLib = filepath =>
-  `${toPosix(filepath)}/`.includes(TYPESCRIPT_LIB)
+const isTypescriptLib = (absolute, relative) =>
+  absolute.includes(NESTED_TYPESCRIPT_LIB) ||
+  relative.startsWith(TOP_LEVEL_TYPESCRIPT_LIB)
 
-const normalizeKeep = entry => {
+const normalizeKeep = (root, entry) => {
   const posix = entry.replace(/\\/g, '/').replace(/(.)\/+$/, '$1')
   if (path.posix.isAbsolute(posix) || path.isAbsolute(entry)) {
     return { absolute: toPosix(resolveReal(posix)) }
   }
-  return { segment: `/${path.posix.normalize(posix).replace(/^\.\//, '')}/` }
+  const normalized = path.posix.normalize(posix).replace(/^\.\//, '')
+  if (normalized === '.') return { absolute: toPosix(root) }
+  return { segment: `/${normalized}/` }
 }
 
+const isInside = (absolute, parent) =>
+  absolute === parent || absolute.startsWith(parent.replace(/\/?$/, '/'))
+
 const createKeepMatcher = (root, keep) => {
-  const rules = keep.map(normalizeKeep)
+  const rules = keep.map(entry => normalizeKeep(root, entry))
   return filepath => {
-    if (isTypescriptLib(filepath)) return true
-    const absolute = toPosix(filepath)
+    const absolute = `${toPosix(filepath)}/`
     const relative = `/${toPosix(path.relative(root, filepath))}/`
+    if (isTypescriptLib(absolute, relative)) return true
     return rules.some(rule =>
       rule.absolute
-        ? absolute === rule.absolute ||
-        absolute.startsWith(rule.absolute.replace(/\/?$/, '/'))
+        ? isInside(absolute.slice(0, -1), rule.absolute)
         : relative.includes(rule.segment)
     )
   }

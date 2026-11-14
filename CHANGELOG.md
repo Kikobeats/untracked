@@ -1,3 +1,9 @@
+## 1.9.0 (2026-11-14)
+
+### Features
+
+* add prune command ([#63](https://github.com/Kikobeats/untracked/issues/63)) ([9ad6e5b](https://github.com/Kikobeats/untracked/commit/9ad6e5baab2494136fa1ef8c1d68898a16d3d9f8))
+
 ## 1.8.0 (2026-11-14)
 
 ### Features

@@ -39,22 +39,28 @@ const resolveReal = filepath =>
 
 const toPosix = filepath => filepath.split(path.sep).join('/')
 
-const readPackageName = dir => {
+const UNKNOWN_PACKAGE = Symbol('unknown package')
+
+const readPackageName = (dir, onError) => {
   try {
     return JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
       .name
-  } catch (_) {
-    return undefined
+  } catch (error) {
+    if (error.code === 'ENOENT') return undefined
+    onError(error)
+    return UNKNOWN_PACKAGE
   }
 }
 
-const isTypescriptLib = dir =>
-  path.basename(dir) === 'lib' &&
-  readPackageName(path.dirname(dir)) === 'typescript'
+const isTypescriptLib = (dir, onError) => {
+  if (path.basename(dir) !== 'lib') return false
+  const name = readPackageName(path.dirname(dir), onError)
+  return name === 'typescript' || name === UNKNOWN_PACKAGE
+}
 
-const isInsideTypescriptLib = dir => {
+const isInsideTypescriptLib = (dir, onError) => {
   for (let current = dir; ; current = path.dirname(current)) {
-    if (isTypescriptLib(current)) return true
+    if (isTypescriptLib(current, onError)) return true
     if (path.dirname(current) === current) return false
   }
 }
@@ -95,7 +101,9 @@ const prune = (dir, { dryRun = false, keep = [] } = {}) => {
   const files = []
   const errors = []
   let bytes = 0
-  const pending = isKept(root) || isInsideTypescriptLib(root) ? [] : [root]
+  const onError = error => errors.push(error)
+  const pending =
+    isKept(root) || isInsideTypescriptLib(root, onError) ? [] : [root]
 
   const removeFile = filepath => {
     try {
@@ -123,7 +131,7 @@ const prune = (dir, { dryRun = false, keep = [] } = {}) => {
       const entryPath = path.join(current, entry.name)
       if (isKept(entryPath)) continue
       if (entry.isDirectory()) {
-        if (!isTypescriptLib(entryPath)) pending.push(entryPath)
+        if (!isTypescriptLib(entryPath, onError)) pending.push(entryPath)
       } else if (entry.isFile() && isPrunable(entry.name)) removeFile(entryPath)
     }
   }

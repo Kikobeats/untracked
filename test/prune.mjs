@@ -56,7 +56,8 @@ const createTree = () => {
   const dir = join(root, 'node_modules')
   for (const file of PRUNED.concat(KEPT)) {
     mkdirSync(dirname(join(dir, file)), { recursive: true })
-    writeFileSync(join(dir, file), 'x'.repeat(10))
+    const content = file.endsWith('package.json') ? '{"name":"pkg"}' : 'x'
+    writeFileSync(join(dir, file), content.padEnd(10))
   }
   writeFileSync(
     join(dir, '.pnpm/typescript@5.0.0/node_modules/typescript/package.json'),
@@ -365,4 +366,29 @@ test('a lib directory of any other package is pruned', t => {
   writeFileSync(join(dir, 'package.json'), '{"name":"typescript-like"}')
   writeFileSync(join(dir, 'lib/index.d.ts'), 'x')
   t.is(prune(join(root, 'node_modules')).files.length, 1)
+})
+
+test('an unreadable typescript package.json keeps its lib and is reported', t => {
+  if (process.getuid && process.getuid() === 0) return t.pass()
+  const pkg = createTypescriptPackage()
+  const manifest = join(pkg, 'package.json')
+  chmodSync(manifest, 0o000)
+  try {
+    const { files, errors } = prune(dirname(pkg))
+    t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
+    t.is(files.length, 1)
+    t.is(errors.length, 1)
+    t.is(errors[0].code, 'EACCES')
+  } finally {
+    chmodSync(manifest, 0o644)
+  }
+})
+
+test('an invalid package.json next to a lib keeps it and is reported', t => {
+  const pkg = createTypescriptPackage()
+  writeFileSync(join(pkg, 'package.json'), '{')
+  const { errors } = prune(dirname(pkg))
+  t.true(existsSync(join(pkg, 'lib/lib.d.ts')))
+  t.is(errors.length, 1)
+  t.true(errors[0] instanceof SyntaxError)
 })

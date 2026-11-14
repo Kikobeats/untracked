@@ -39,28 +39,25 @@ const resolveReal = filepath =>
 
 const toPosix = filepath => filepath.split(path.sep).join('/')
 
-const UNKNOWN_PACKAGE = Symbol('unknown package')
-
-const readPackageName = (dir, onError) => {
+const readLibOwner = dir => {
+  if (path.basename(dir) !== 'lib') return {}
+  const manifest = path.join(path.dirname(dir), 'package.json')
   try {
-    return JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'))
-      .name
+    return { name: JSON.parse(fs.readFileSync(manifest, 'utf8')).name }
   } catch (error) {
-    if (error.code === 'ENOENT') return undefined
-    onError(error)
-    return UNKNOWN_PACKAGE
+    return error.code === 'ENOENT' ? {} : { error }
   }
 }
 
 const isTypescriptLib = (dir, onError) => {
-  if (path.basename(dir) !== 'lib') return false
-  const name = readPackageName(path.dirname(dir), onError)
-  return name === 'typescript' || name === UNKNOWN_PACKAGE
+  const { name, error } = readLibOwner(dir)
+  if (error) onError(error)
+  return name === 'typescript' || Boolean(error)
 }
 
-const isInsideTypescriptLib = (dir, onError) => {
+const isInsideTypescriptLib = dir => {
   for (let current = dir; ; current = path.dirname(current)) {
-    if (isTypescriptLib(current, onError)) return true
+    if (readLibOwner(current).name === 'typescript') return true
     if (path.dirname(current) === current) return false
   }
 }
@@ -102,8 +99,7 @@ const prune = (dir, { dryRun = false, keep = [] } = {}) => {
   const errors = []
   let bytes = 0
   const onError = error => errors.push(error)
-  const pending =
-    isKept(root) || isInsideTypescriptLib(root, onError) ? [] : [root]
+  const pending = isKept(root) || isInsideTypescriptLib(root) ? [] : [root]
 
   const removeFile = filepath => {
     try {

@@ -392,3 +392,26 @@ test('an invalid package.json next to a lib keeps it and is reported', t => {
   t.is(errors.length, 1)
   t.true(errors[0] instanceof SyntaxError)
 })
+
+for (const [state, breakManifest] of [
+  ['invalid', manifest => writeFileSync(manifest, '{')],
+  ['unreadable', manifest => chmodSync(manifest, 0o000)]
+]) {
+  test(`an ${state} package.json above the root does not stop the prune`, t => {
+    if (process.getuid && process.getuid() === 0) return t.pass()
+    const root = mkdtempSync(join(tmpdir(), 'untracked-prune-'))
+    const manifest = join(root, 'package.json')
+    writeFileSync(manifest, '{"name":"app"}')
+    const dir = join(root, 'lib/node_modules')
+    mkdirSync(join(dir, 'pkg'), { recursive: true })
+    writeFileSync(join(dir, 'pkg/index.d.ts'), 'x')
+    breakManifest(manifest)
+    try {
+      const { files, errors } = prune(dir)
+      t.is(files.length, 1)
+      t.deepEqual(errors, [])
+    } finally {
+      chmodSync(manifest, 0o644)
+    }
+  })
+}

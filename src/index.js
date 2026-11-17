@@ -12,15 +12,9 @@ const FINISH = '### finished auto generated using `untracked`'
 
 const LINE_BREAK = /\r?\n/
 
-const detectLineEnding = content => {
-  const firstBreak = content.match(LINE_BREAK)
-  return firstBreak ? firstBreak[0] : '\n'
-}
-
 const untrackedWrite = async (filepath, opts) => {
   const fs = require('fs')
   const content = fs.readFileSync(filepath, 'utf8')
-  const lineEnding = detectLineEnding(content)
   const lines = content.split(LINE_BREAK)
 
   const startIndex = lines.indexOf(START)
@@ -29,7 +23,11 @@ const untrackedWrite = async (filepath, opts) => {
   if (startIndex === -1 || endIndex === -1) {
     throw new Error(`Markers not found in ${filepath}`)
   }
+  if (endIndex < startIndex) {
+    throw new Error(`Finish marker appears before start marker in ${filepath}`)
+  }
 
+  const lineEnding = content.match(LINE_BREAK)[0]
   const output = await untracked(opts)
   const updatedLines = [
     ...lines.slice(0, startIndex),

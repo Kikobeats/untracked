@@ -84,6 +84,18 @@ test('write mode throws when markers are missing', async t => {
   })
 })
 
+test('write mode throws when the finish marker comes before the start marker', async t => {
+  const dir = createFixture()
+  const filepath = join(dir, '.dockerignore')
+  const original = [untracked.FINISH, 'old content', untracked.START, ''].join('\r\n')
+  writeFileSync(filepath, original)
+
+  await t.throwsAsync(() => untracked.write(filepath, { cwd: dir }), {
+    message: /Finish marker appears before start marker/
+  })
+  t.is(readFileSync(filepath, 'utf8'), original)
+})
+
 test('write mode finds markers in a CRLF file and keeps CRLF line endings', async t => {
   const dir = createFixture()
   const filepath = join(dir, '.dockerignore')

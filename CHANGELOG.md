@@ -1,3 +1,9 @@
+## 1.9.1 (2026-11-17)
+
+### Bug Fixes
+
+* **write:** find markers in CRLF ignore files ([#65](https://github.com/Kikobeats/untracked/issues/65)) ([58cf17b](https://github.com/Kikobeats/untracked/commit/58cf17ba45ab1cbc0a1129d34ba97f941fc1009e)), closes [#64](https://github.com/Kikobeats/untracked/issues/64)
+
 ## 1.9.0 (2026-11-14)
 
 ### Features

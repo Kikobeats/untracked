@@ -83,3 +83,32 @@ test('write mode throws when markers are missing', async t => {
     message: /Markers not found/
   })
 })
+
+test('write mode finds markers in a CRLF file and keeps CRLF line endings', async t => {
+  const dir = createFixture()
+  const filepath = join(dir, '.dockerignore')
+  writeFileSync(
+    filepath,
+    ['# header', untracked.START, 'old content', untracked.FINISH, '# footer', ''].join('\r\n')
+  )
+
+  await untracked.write(filepath, { cwd: dir })
+  const result = readFileSync(filepath, 'utf8')
+
+  t.false(result.includes('old content'))
+  t.true(result.startsWith(`# header\r\n${untracked.START}\r\n`))
+  t.true(result.endsWith(`${untracked.FINISH}\r\n# footer\r\n`))
+  t.is(result.split('\r\n').join('').includes('\n'), false, 'no bare LF left')
+})
+
+test('write mode keeps LF line endings in an LF file', async t => {
+  const dir = createFixture()
+  const filepath = join(dir, '.dockerignore')
+  writeFileSync(filepath, `${untracked.START}\n${untracked.FINISH}\n`)
+
+  await untracked.write(filepath, { cwd: dir })
+  const result = readFileSync(filepath, 'utf8')
+
+  t.false(result.includes('\r'))
+  t.true(result.endsWith(`${untracked.FINISH}\n`))
+})

@@ -10,10 +10,18 @@ const cleanup = array => [...new Set(array)].sort((a, b) => a.localeCompare(b))
 const START = '### start auto generated using `untracked`'
 const FINISH = '### finished auto generated using `untracked`'
 
+const LINE_BREAK = /\r?\n/
+
+const detectLineEnding = content => {
+  const firstBreak = content.match(LINE_BREAK)
+  return firstBreak ? firstBreak[0] : '\n'
+}
+
 const untrackedWrite = async (filepath, opts) => {
   const fs = require('fs')
   const content = fs.readFileSync(filepath, 'utf8')
-  const lines = content.split('\n')
+  const lineEnding = detectLineEnding(content)
+  const lines = content.split(LINE_BREAK)
 
   const startIndex = lines.indexOf(START)
   const endIndex = lines.indexOf(FINISH)
@@ -29,7 +37,7 @@ const untrackedWrite = async (filepath, opts) => {
     ...lines.slice(endIndex + 1)
   ]
 
-  fs.writeFileSync(filepath, updatedLines.join('\n'), 'utf8')
+  fs.writeFileSync(filepath, updatedLines.join(lineEnding), 'utf8')
 }
 
 const untracked = async opts => {
